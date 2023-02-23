@@ -1,3 +1,4 @@
+package misc;
 
 public class Vector3 {
 	
@@ -14,7 +15,7 @@ public class Vector3 {
 		this.z = z;
 	}
 	
-	public Vector3 addTo(Vector3 other) {
+	public Vector3 add(Vector3 other) {
 		return new Vector3(x + other.x, y + other.y, z + other.z);
 	}
 	

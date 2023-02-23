@@ -1,3 +1,9 @@
+package game_objects;
+import components.Material;
+import misc.Ray;
+import misc.RaycastHit;
+import misc.Vector3;
+
 public class Sphere extends GameObject {
 	
 	private double radius;
@@ -14,7 +20,7 @@ public class Sphere extends GameObject {
 	}
 
 	@Override
-	public double rayIntersect(Ray ray) {
+	public RaycastHit rayIntersect(Ray ray) {
 		//P = O + t*ray.direction 
 		//(S - P)(S - P) = R^2
 		//(S - O - t*ray.dir)(S - O - t*ray.dir) = R^2
@@ -26,20 +32,15 @@ public class Sphere extends GameObject {
 		double a = ray.direction.dotProduct(ray.direction);
 		double b = -2 * diff.dotProduct(ray.direction);
 		double c = diff.dotProduct(diff) - radius*radius;
-		
-		//System.out.println("a: " + a);
-		//System.out.println("b: " + b);
-		//System.out.println("c: " + c);
-		
+
 		double determinant = b*b - 4*a*c;
 		
-		//System.out.println("Det: " + determinant);
 		
 		double x1 = -1;
 		double x2 = -1;
 		
 		if(determinant < 0) {
-			return -1;
+			return null;
 		} else if(determinant == 0) {
 			x1 = -b / (2*a);
 		} else {
@@ -47,17 +48,20 @@ public class Sphere extends GameObject {
 			x2 = (-b + Math.sqrt(determinant))/(2*a);
 		}
 		
-		//System.out.println("x1: " + x1);
-		//System.out.println("x2: " + x2);
 		
 		if(x1 > 0) {
-			return x1;
+			return new RaycastHit(ray.pointOnRay(x1), x1, this);
 		} else if(x2 > 0) {
-			return x2;
+			return new RaycastHit(ray.pointOnRay(x2), x2, this);
 		}
 		
 		
-		return -1;
+		return null;
+	}
+
+	@Override
+	public Vector3 normal(Vector3 position) {
+		return position.subtract(this.position);
 	}
 
 

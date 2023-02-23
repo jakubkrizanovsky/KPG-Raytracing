@@ -6,6 +6,13 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import components.Material;
+import game_objects.GameObject;
+import game_objects.Sphere;
+import misc.Ray;
+import misc.RaycastHit;
+import misc.Vector3;
+
 /**
  * 
  */
@@ -57,7 +64,7 @@ public class Scene extends JFrame {
 	private static void createScene() {
 		Sphere sphere = new Sphere(Vector3.ZERO, 0.5, new Material(Color.GREEN));
 		//Vector3 nearPlaneCenter = CAMERA_ORIGIN.addTo(CAMERA_DIRECTION.multiplyBy(NEAR_PLANE_DISTANCE));
-		Vector3 topLeft = CAMERA_ORIGIN.addTo(new Vector3(-CAMERA_FOV_X/2, 0, 0)).addTo(new Vector3(0, -CAMERA_FOV_Y/2, 0));
+		Vector3 topLeft = CAMERA_ORIGIN.add(new Vector3(-CAMERA_FOV_X/2, 0, 0)).add(new Vector3(0, -CAMERA_FOV_Y/2, 0));
 //		double xDiff = CAMERA_FOV_X/WIDTH;
 //		double yDiff = CAMERA_FOV_Y/HEIGHT;
 		double xDiff = CAMERA_FOV_X/WIDTH;
@@ -86,14 +93,12 @@ public class Scene extends JFrame {
 		
 		for(int x = 0; x < WIDTH; x++) {
 			for(int y = 0; y < HEIGHT; y++) {
-				Vector3 pixelPosition = topLeft.addTo(new Vector3(x*xDiff, y*yDiff, 0));
+				Vector3 pixelPosition = topLeft.add(new Vector3(x*xDiff, y*yDiff, 0));
 				Ray ray = new Ray(pixelPosition, CAMERA_DIRECTION);
-				if(sphere.rayIntersect(ray) > 0) {
-					image.setRGB(x, y, sphere.material.color.getRGB());
-					//System.out.println("Ray origin: " + ray.origin);
-					//System.out.println("Hit");
-				} else {
-					//System.out.println("Not Hit");
+				RaycastHit hit = sphere.rayIntersect(ray);
+				if(hit != null) {
+					image.setRGB(x, y, hit.gameObject.material.color.getRGB());
+					
 				}
 			}
 		}
