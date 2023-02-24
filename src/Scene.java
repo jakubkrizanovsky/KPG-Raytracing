@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import color_blending.BlendMode;
+import color_blending.ColorBlender;
 import components.Material;
 import game_objects.GameObject;
 import game_objects.Sphere;
@@ -34,13 +36,15 @@ public class Scene extends JFrame {
 	
 	private static final Vector3 CAMERA_ORIGIN = new Vector3(0, 0, -10);
 	private static final Vector3 CAMERA_DIRECTION = new Vector3(0, 0, 1);
-	
-	private final static double NEAR_PLANE_DISTANCE = 1;
+
 	private final static double CAMERA_FOV_X = 12;
 	private final static double CAMERA_FOV_Y = 6.75;
 	
-	private final static Vector3 LIGHT_DIRECTION = new Vector3(0, -1, 0);
-	private final static Color LIGHT_COLOR = Color.WHITE;
+	private final static Vector3 LIGHT_DIRECTION = new Vector3(1, -1, -1);
+	private final static Color DIRECTIONAL_LIGHT_COLOR = Color.WHITE;
+	
+	private final static int AMBIENT_LIGHT_INTENSITY = 10;
+	private final static Color AMBIENT_LIGHT_COLOR = new Color(AMBIENT_LIGHT_INTENSITY, AMBIENT_LIGHT_INTENSITY, AMBIENT_LIGHT_INTENSITY);
 	
 
 	/**
@@ -63,6 +67,7 @@ public class Scene extends JFrame {
 	
 	private static void createScene() {
 		Sphere sphere = new Sphere(Vector3.ZERO, 0.5, new Material(Color.GREEN));
+		Sphere sphere2 = new Sphere(Vector3.ZERO, 0.5, new Material(Color.RED));
 		//Vector3 nearPlaneCenter = CAMERA_ORIGIN.addTo(CAMERA_DIRECTION.multiplyBy(NEAR_PLANE_DISTANCE));
 		Vector3 topLeft = CAMERA_ORIGIN.add(new Vector3(-CAMERA_FOV_X/2, 0, 0)).add(new Vector3(0, -CAMERA_FOV_Y/2, 0));
 //		double xDiff = CAMERA_FOV_X/WIDTH;
@@ -97,8 +102,19 @@ public class Scene extends JFrame {
 				Ray ray = new Ray(pixelPosition, CAMERA_DIRECTION);
 				RaycastHit hit = sphere.rayIntersect(ray);
 				if(hit != null) {
-					image.setRGB(x, y, hit.gameObject.material.color.getRGB());
+					//Ambient light
+					Color light = AMBIENT_LIGHT_COLOR; 
 					
+					//Lambert
+					Vector3 normal = hit.gameObject.normal(hit.position);
+					double intensity = LIGHT_DIRECTION.dotProduct(normal);
+					Color lambert = ColorBlender.blendColors(DIRECTIONAL_LIGHT_COLOR, Color.BLACK, new BlendMode(intensity, 1-intensity));
+					
+					light = ColorBlender.addColors(light, lambert);
+					
+					Color color = ColorBlender.multiplyColors(hit.gameObject.material.color, light);
+					
+					image.setRGB(x, y, color.getRGB());
 				}
 			}
 		}
