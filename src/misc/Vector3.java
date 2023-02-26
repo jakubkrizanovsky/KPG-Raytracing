@@ -31,6 +31,10 @@ public class Vector3 {
 		double magnitude = magnitude();
 		return multiplyBy(1/magnitude);
 	}
+	
+	public Vector3 bounce(Vector3 normal) {
+		return this.subtract(normal.multiplyBy(2*this.dotProduct(normal)));
+	}
 
 	public double magnitude() {
 		return Math.sqrt(x*x + y*y + z*z);

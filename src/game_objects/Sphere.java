@@ -2,6 +2,7 @@ package game_objects;
 import components.Material;
 import misc.Ray;
 import misc.RaycastHit;
+import misc.Scene;
 import misc.Vector3;
 
 public class Sphere extends GameObject {
@@ -48,11 +49,12 @@ public class Sphere extends GameObject {
 			x2 = (-b + Math.sqrt(determinant))/(2*a);
 		}
 		
-		
-		if(x1 > 0) {
-			return new RaycastHit(ray.pointOnRay(x1), x1, this);
-		} else if(x2 > 0) {
-			return new RaycastHit(ray.pointOnRay(x2), x2, this);
+		if(x1 > Scene.MIN_HIT_DISTANCE) {
+			Vector3 position = ray.pointOnRay(x1);
+			return new RaycastHit(position, normal(position), x1, this);
+		} else if(x2 > Scene.MIN_HIT_DISTANCE) {
+			Vector3 position = ray.pointOnRay(x2);
+			return new RaycastHit(position, normal(position), x2, this);
 		}
 		
 		
@@ -61,7 +63,7 @@ public class Sphere extends GameObject {
 
 	@Override
 	public Vector3 normal(Vector3 position) {
-		return position.subtract(this.position);
+		return position.subtract(this.position).normalize();
 	}
 
 

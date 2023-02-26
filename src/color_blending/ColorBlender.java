@@ -27,9 +27,19 @@ public class ColorBlender {
 	public static Color multiplyColors(Color color1, Color color2) {
 		//TODO alpha
 		
-		int r = saturate(color1.getRed() * color2.getRed() / 255);
-		int g = saturate(color1.getGreen() * color2.getGreen() / 255);
-		int b = saturate(color1.getBlue() * color2.getBlue() / 255);
+		int r = saturate(color1.getRed() * color2.getRed() / 255.0);
+		int g = saturate(color1.getGreen() * color2.getGreen() / 255.0);
+		int b = saturate(color1.getBlue() * color2.getBlue() / 255.0);
+		
+		return new Color(r, g, b);
+	}
+	
+	public static Color multiplyColor(Color color1, double k) {
+		//TODO alpha
+		
+		int r = saturate(color1.getRed() * k);
+		int g = saturate(color1.getGreen() * k);
+		int b = saturate(color1.getBlue() * k);
 		
 		return new Color(r, g, b);
 	}
