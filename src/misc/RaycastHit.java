@@ -1,5 +1,5 @@
 package misc;
-import game_objects.GameObject;
+import objects.GameObject;
 
 public class RaycastHit {
 	
