@@ -6,12 +6,14 @@ import misc.Vector3;
 
 public abstract class GameObject {
 	
+	protected final static double MIN_HIT_DISTANCE = 0.01;
+	
 	public final Vector3 position;
-	public final Vector3 scale;
+	public final double scale;
 	public final Material material;
 
 	
-	public GameObject(Vector3 position, Vector3 scale, Material material) {
+	public GameObject(Vector3 position, double scale, Material material) {
 		this.position = position;
 		this.scale = scale;
 		this.material = material;

@@ -9,6 +9,11 @@ public class Vector3 {
 	public static final Vector3 ZERO = new Vector3(0, 0, 0);
 	public static final Vector3 ONE = new Vector3(1, 1, 1);
 	
+	public static final Vector3 UP = new Vector3(0, 1, 0);
+	public static final Vector3 DOWN = new Vector3(0, -1, 0);
+	public static final Vector3 FORWARD = new Vector3(0, 0, 1);
+	public static final Vector3 BACK = new Vector3(0, 0, -1);
+	
 	public Vector3(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
@@ -34,6 +39,18 @@ public class Vector3 {
 	
 	public Vector3 bounce(Vector3 normal) {
 		return this.subtract(normal.multiplyBy(2*this.dotProduct(normal)));
+	}
+	
+	public Vector3 crossProduct(Vector3 other) {
+		return new Vector3(
+				this.y * other.z - this.z * other.y,
+				this.z * other.x - this.x * other.z,
+				this.x * other.y - this.y * other.x
+				);
+	}
+	
+	public Vector3 opposite() {
+		return new Vector3(-x, -y, -z);
 	}
 
 	public double magnitude() {

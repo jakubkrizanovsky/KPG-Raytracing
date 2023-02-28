@@ -16,6 +16,7 @@ import misc.Ray;
 import misc.RaycastHit;
 import misc.Vector3;
 import objects.GameObject;
+import objects.Plane;
 import objects.Sphere;
 
 /**
@@ -36,13 +37,12 @@ public class Main extends JFrame {
 	private final static int WIDTH = 1200;
 	private final static int HEIGHT = 675;
 	
-	private static final Vector3 CAMERA_ORIGIN = new Vector3(0, 0, -5);
+	private static final Vector3 CAMERA_ORIGIN = new Vector3(0, 1, -10);
 	private static final Vector3 CAMERA_DIRECTION = new Vector3(0, 0, 1);
 
 
 	public final static int MAX_BOUNCES = 10;
 	
-	public final static double MIN_HIT_DISTANCE = 0.01;
 	
 
 	/**
@@ -70,14 +70,19 @@ public class Main extends JFrame {
 	}
 	
 	private static void createScene(Scene scene) {
-		Sphere sphere = new Sphere(Vector3.ZERO, 0.5, new Material(Color.GREEN));
-		Sphere sphere2 = new Sphere(new Vector3(0, 1.5, 1), 0.5, new Material(Color.ORANGE));
-		Sphere sphere3 = new Sphere(new Vector3(2, 1, 1), 1, new Material(Color.WHITE));
-		Sphere sphere4 = new Sphere(new Vector3(2, -1, -0.1), 0.2, new Material(Color.BLUE));
+		Sphere sphere = new Sphere(new Vector3(-2, 0.5, 2), 1, new Material(Color.GREEN));
+		Sphere sphere2 = new Sphere(new Vector3(0, 0.5, 1), 1, new Material(Color.ORANGE));
+		Sphere sphere3 = new Sphere(new Vector3(2, 1, 1), 2, new Material(Color.WHITE));
+		Sphere sphere4 = new Sphere(new Vector3(2, 0.1, -1), 0.2, new Material(Color.BLUE));
+		Plane plane = new Plane(Vector3.ZERO, Vector3.UP, 10, new Material(Color.GRAY));
+		Plane plane2 = new Plane(new Vector3(0, 0, 5), Vector3.BACK, 10, new Material(Color.WHITE));
+		
 		scene.objects.add(sphere);
 		scene.objects.add(sphere2);
 		scene.objects.add(sphere3);
 		scene.objects.add(sphere4);
+		scene.objects.add(plane);
+		scene.objects.add(plane2);
 	}
 	
 

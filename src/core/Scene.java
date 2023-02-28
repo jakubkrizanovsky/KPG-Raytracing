@@ -21,7 +21,7 @@ public class Scene {
 	
 	private final AmbientLight ambientLight = new AmbientLight(Color.WHITE, 0.1);
 	
-	private final DirectionalLight directionalLight = new DirectionalLight(Color.WHITE, 1, new Vector3(0, -1, 0));
+	private final DirectionalLight directionalLight = new DirectionalLight(Color.WHITE, 1, new Vector3(1, -1, 1));
 
 	public Scene() {
 		
@@ -47,20 +47,23 @@ public class Scene {
 		} else {
 			Ray bounce = new Ray(hit.position, ray.direction.bounce(hit.normal));
 			
-			double intensity =  Math.max(0, bounce.direction.dotProduct(hit.normal));
-			Color lrc = ColorBlender.multiplyColor(reflectionRay(bounce, recursive-1), intensity);
-			Color light = ColorBlender.addColors(ambientLight.getColor(), lrc);
-			//Color light = lrc;
 			
-			//Color light = ColorBlender.addColors(AMBIENT_LIGHT_COLOR, lightRay(bounce, recursive-1));
+			//Reflected light
+			double intensity = Math.max(0, bounce.direction.dotProduct(hit.normal));
+			Color light = ColorBlender.multiplyColor(reflectionRay(bounce, recursive-1), intensity);
 			
+			//Ambient light
+			light = ColorBlender.addColors(ambientLight.getColor(), light);
+			
+			//Lambert
 			light = ColorBlender.addColors(light, shadowRay(hit));
+
 			return ColorBlender.multiplyColors(light, hit.gameObject.material.color);
 		}
 	}
 	
 	private Color shadowRay(RaycastHit hit) {
-		Ray shadowRay = new Ray(hit.position, directionalLight.direction);
+		Ray shadowRay = new Ray(hit.position, directionalLight.direction.opposite());
 		
 		for(GameObject object : objects) {
 			RaycastHit currentHit = object.rayIntersect(shadowRay);
@@ -70,7 +73,7 @@ public class Scene {
 		}
 
 		
-		double intensity = Math.max(0, shadowRay.direction.dotProduct(hit.normal));
+		double intensity = shadowRay.direction.dotProduct(hit.normal);
 		return ColorBlender.multiplyColor(directionalLight.getColor(), intensity);
 	}
 

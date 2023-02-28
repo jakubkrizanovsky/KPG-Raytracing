@@ -1,6 +1,5 @@
 package objects;
 import components.Material;
-import core.Main;
 import misc.Ray;
 import misc.RaycastHit;
 import misc.Vector3;
@@ -9,13 +8,13 @@ public class Sphere extends GameObject {
 	
 	private double radius;
 	
-	public Sphere(Vector3 position, double radius) {
-		this(position, radius, Material.DEFAULT);
+	public Sphere(Vector3 position, double scale) {
+		this(position, scale, Material.DEFAULT);
 	}
 	
-	public Sphere(Vector3 position, double radius, Material material) {
-		super(position, Vector3.ONE.multiplyBy(radius), material);
-		this.radius = radius;
+	public Sphere(Vector3 position, double scale, Material material) {
+		super(position, scale, material);
+		this.radius = scale / 2;
 	}
 
 	@Override
@@ -47,10 +46,10 @@ public class Sphere extends GameObject {
 			x2 = (-b + Math.sqrt(determinant))/(2*a);
 		}
 		
-		if(x1 > Main.MIN_HIT_DISTANCE) {
+		if(x1 > MIN_HIT_DISTANCE) {
 			Vector3 position = ray.pointOnRay(x1);
 			return new RaycastHit(position, normal(position), x1, this);
-		} else if(x2 > Main.MIN_HIT_DISTANCE) {
+		} else if(x2 > MIN_HIT_DISTANCE) {
 			Vector3 position = ray.pointOnRay(x2);
 			return new RaycastHit(position, normal(position), x2, this);
 		}
