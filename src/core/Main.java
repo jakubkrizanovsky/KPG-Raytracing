@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import camera.AntiAliasedPerspectiveCamera;
 import camera.Camera;
 import camera.OrthogonalCamera;
 import camera.PerspectiveCamera;
@@ -54,6 +55,7 @@ public class Main extends JFrame {
 		Scene scene = new Scene();
 		createScene(scene);
 		
+		//Camera cam = new AntiAliasedPerspectiveCamera(scene, CAMERA_ORIGIN, CAMERA_DIRECTION);
 		Camera cam = new PerspectiveCamera(scene, CAMERA_ORIGIN, CAMERA_DIRECTION);
 		cam.generateScene(image);
 		

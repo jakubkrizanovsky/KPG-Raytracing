@@ -44,6 +44,24 @@ public class ColorBlender {
 		return new Color(r, g, b);
 	}
 	
+	public static Color averageColors(Color ... colors) {
+		int r = 0;
+		int g = 0;
+		int b = 0;
+		
+		for(Color c : colors) {
+			r += c.getRed();
+			g += c.getGreen();
+			b += c.getBlue();
+		}
+		
+		r /= colors.length;
+		g /= colors.length;
+		b /= colors.length;
+		
+		return new Color(r, g, b);
+	}
+	
 	private static int saturate(double d) {
 		return (int)Math.min(255, Math.max(0, d));
 	}
