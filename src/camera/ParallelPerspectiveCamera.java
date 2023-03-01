@@ -3,17 +3,22 @@ package camera;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+import java.util.Arrays;
+
 import components.Transform;
 import core.Scene;
 import misc.Constants;
 import misc.Ray;
 import misc.Vector3;
 
-public class PerspectiveCamera extends Camera {
+public class ParallelPerspectiveCamera extends Camera {
 	
-	public final static double focalLength = 1;
+//	private final static double FOV_X = 1.2;
+//	private final static double FOV_Y = 0.675;
+	private final static double focalLength = 1;
+	
 
-	public PerspectiveCamera(Scene scene, Transform transform) {
+	public ParallelPerspectiveCamera(Scene scene, Transform transform) {
 		super(scene, transform);
 	}
 
@@ -31,20 +36,32 @@ public class PerspectiveCamera extends Camera {
 		double xDiff = sizeX/image.getWidth();
 		double yDiff = sizeY/image.getHeight();
 		
+		Ray[][] rays = new Ray[image.getWidth()][image.getHeight()];
+		
 		for(int x = 0; x < image.getWidth(); x++) {
 			for(int y = 0; y < image.getHeight(); y++) {
 				
 				Vector3 pixelPosition = topLeft
 						.add(transform.right.multiplyBy(x*xDiff))
 						.add(transform.up.multiplyBy(-y*yDiff));
+
+				rays[x][y] = new Ray(transform.position, pixelPosition.subtract(transform.position));
 				
-				Ray ray = new Ray(transform.position, pixelPosition.subtract(transform.position));
-				Color color = scene.reflectionRay(ray, Constants.MAX_BOUNCES);
-				
-				image.setRGB(x, y, color.getRGB());
 			}
 		}
 		
+		Arrays.stream(rays).parallel().forEach((col) -> {
+			Arrays.stream(col).parallel().forEach((ray) -> {
+				Color color = scene.reflectionRay(ray, Constants.MAX_BOUNCES);
+				ray.col = color.getRGB();
+			});
+		});
+		
+		for(int x = 0; x < image.getWidth(); x++) {
+			for(int y = 0; y < image.getHeight(); y++) {
+				image.setRGB(x, y, rays[x][y].col);
+			}
+		}
 	}
 
 }

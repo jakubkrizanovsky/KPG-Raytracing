@@ -2,8 +2,6 @@ package core;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.JFrame;
 
@@ -11,7 +9,6 @@ import camera.AntiAliasedPerspectiveCamera;
 import camera.Camera;
 import components.Material;
 import components.Transform;
-import misc.Constants;
 import misc.Vector3;
 import objects.Plane;
 import objects.Sphere;
@@ -34,12 +31,11 @@ public class Main extends JFrame {
 	private final static int WIDTH = 1200;
 	private final static int HEIGHT = 675;
 	
-	private static final Vector3 CAMERA_ORIGIN = new Vector3(0, 1, -10);
+	private static final Vector3 CAMERA_ORIGIN = new Vector3(0, 1, -5);
 	private static final Vector3 CAMERA_DIRECTION = new Vector3(0, -0.5, 1);
 
 
-	public final static int MAX_BOUNCES = 10;
-	
+
 	public static Camera cam;
 	
 	private static Plane plane;
@@ -86,7 +82,7 @@ public class Main extends JFrame {
 		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE));
 		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE));
 		plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE));
-		Plane plane2 = new Plane(new Transform(new Vector3(0, 0, 5), 10, new Vector3(0, 10, 0)), new Material(Color.WHITE));
+		Plane plane2 = new Plane(new Transform(new Vector3(0, 5, 6), 10, new Vector3(0, 10, 0)), new Material(Color.WHITE));
 		
 		scene.objects.add(sphere);
 		scene.objects.add(sphere2);
@@ -114,7 +110,9 @@ public class Main extends JFrame {
 		
 		update();
 		
+		long start = System.nanoTime();
 		cam.generateScene(image);
+		System.out.println((System.nanoTime() - start)*1e-9 + " s");
 		
 		g.drawImage(image, 0, 0, Color.BLACK, null);
 		
