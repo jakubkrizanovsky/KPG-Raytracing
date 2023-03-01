@@ -10,7 +10,7 @@ public class DirectionalLight extends Light {
 
 	public DirectionalLight(Color color, double intensity, Vector3 direction) {
 		super(color, intensity);
-		this.direction = direction;
+		this.direction = direction.normalize();
 	}
 
 }

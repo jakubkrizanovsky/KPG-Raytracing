@@ -9,27 +9,26 @@ import misc.Ray;
 import misc.Vector3;
 
 public class OrthogonalCamera extends Camera {
-	
-	private final static double FOV_X = 12;
-	private final static double FOV_Y = 6.75;
 
-	public OrthogonalCamera(Scene scene, Vector3 position, Vector3 direction) {
-		super(scene, position, direction);
+	public OrthogonalCamera(Scene scene, Vector3 position, Vector3 direction, double scale) {
+		super(scene, position, direction, scale);
 	}
 
 	@Override
 	public void generateScene(BufferedImage image) {
-		//Vector3 topLeft = position.add(new Vector3(-FOV_X/2, 0, 0)).add(new Vector3(0, -FOV_Y/2, 0));
-		Vector3 topLeft = position
-				.add(right.multiplyBy(-FOV_X/2))
-				.add(up.multiplyBy(FOV_Y/2));
 		
-		double xDiff = FOV_X/image.getWidth();
-		double yDiff = FOV_Y/image.getHeight();
+		double sizeX = image.getWidth() * scale;
+		double sizeY = image.getHeight() * scale;
+		
+		Vector3 topLeft = position
+				.add(right.multiplyBy(-sizeX/2))
+				.add(up.multiplyBy(sizeY/2));
+		
+		double xDiff = sizeX/image.getWidth();
+		double yDiff = sizeY/image.getHeight();
 		
 		for(int x = 0; x < image.getWidth(); x++) {
 			for(int y = 0; y < image.getHeight(); y++) {
-				//Vector3 pixelPosition = topLeft.add(new Vector3(x*xDiff, y*yDiff, 0));
 				
 				Vector3 pixelPosition = topLeft
 						.add(right.multiplyBy(x*xDiff))

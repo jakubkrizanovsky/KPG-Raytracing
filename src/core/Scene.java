@@ -15,13 +15,15 @@ import objects.GameObject;
 
 public class Scene {
 	
+	private final double PHONG_CONSTANT = 0.99;
+	
 	public final List<GameObject> objects = new LinkedList<GameObject>();
 	
 	public final List<Light> lights = new LinkedList<Light>();
 	
-	private final AmbientLight ambientLight = new AmbientLight(Color.WHITE, 0.1);
+	private final AmbientLight ambientLight = new AmbientLight(Color.WHITE, 0);
 	
-	private final DirectionalLight directionalLight = new DirectionalLight(Color.WHITE, 1, new Vector3(1, -1, 1));
+	private final DirectionalLight directionalLight = new DirectionalLight(Color.WHITE, 1, new Vector3(0, -1, 0));
 
 	public Scene() {
 		
@@ -43,22 +45,29 @@ public class Scene {
 		}
 		
 		if(hit == null) {
-			return Color.BLACK;
+			double phongIntensity = directionalLight.direction.opposite().dotProduct(ray.direction);
+			
+			if(phongIntensity > PHONG_CONSTANT) {
+				return ColorBlender.multiplyColor(directionalLight.getColor(), (phongIntensity - PHONG_CONSTANT) / (1 - PHONG_CONSTANT));
+			} else {
+				return Color.BLACK;
+			}
+			
 		} else {
 			Ray bounce = new Ray(hit.position, ray.direction.bounce(hit.normal));
 			
 			
 			//Reflected light
 			double intensity = Math.max(0, bounce.direction.dotProduct(hit.normal));
-			Color light = ColorBlender.multiplyColor(reflectionRay(bounce, recursive-1), intensity);
+			Color reflectedLight = ColorBlender.multiplyColor(reflectionRay(bounce, recursive-1), intensity);
 			
-			//Ambient light
-			light = ColorBlender.addColors(ambientLight.getColor(), light);
-			
-			//Lambert
-			light = ColorBlender.addColors(light, shadowRay(hit));
+			reflectedLight = ColorBlender.multiplyColors(reflectedLight, ColorBlender.multiplyColor(hit.gameObject.material.color, hit.gameObject.material.metallicity));
 
-			return ColorBlender.multiplyColors(light, hit.gameObject.material.color);
+			//Lambert + Ambient light
+			Color light = ColorBlender.addColors(ambientLight.getColor(), shadowRay(hit));
+			light = ColorBlender.multiplyColors(light, hit.gameObject.material.color);
+			
+			return ColorBlender.addColors(reflectedLight, light);
 		}
 	}
 	

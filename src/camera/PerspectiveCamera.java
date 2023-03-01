@@ -10,25 +10,28 @@ import misc.Vector3;
 
 public class PerspectiveCamera extends Camera {
 	
-	private final static double FOV_X = 1.2;
-	private final static double FOV_Y = 0.675;
+//	private final static double FOV_X = 1.2;
+//	private final static double FOV_Y = 0.675;
 	private final static double focalLength = 1;
 	
 
-	public PerspectiveCamera(Scene scene, Vector3 position, Vector3 direction) {
-		super(scene, position, direction);
+	public PerspectiveCamera(Scene scene, Vector3 position, Vector3 direction, double scale) {
+		super(scene, position, direction, scale);
 	}
 
 	@Override
 	public void generateScene(BufferedImage image) {
 		
+		double sizeX = image.getWidth() * scale;
+		double sizeY = image.getHeight() * scale;
+		
 		Vector3 topLeft = position
 				.add(direction.multiplyBy(focalLength))
-				.add(right.multiplyBy(-FOV_X/2))
-				.add(up.multiplyBy(FOV_Y/2));
+				.add(right.multiplyBy(-sizeX/2))
+				.add(up.multiplyBy(sizeY/2));
 		
-		double xDiff = FOV_X/image.getWidth();
-		double yDiff = FOV_Y/image.getHeight();
+		double xDiff = sizeX/image.getWidth();
+		double yDiff = sizeY/image.getHeight();
 		
 		for(int x = 0; x < image.getWidth(); x++) {
 			for(int y = 0; y < image.getHeight(); y++) {

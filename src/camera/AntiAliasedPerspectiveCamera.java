@@ -11,8 +11,8 @@ import misc.Vector3;
 
 public class AntiAliasedPerspectiveCamera extends PerspectiveCamera {
 
-	public AntiAliasedPerspectiveCamera(Scene scene, Vector3 position, Vector3 direction) {
-		super(scene, position, direction);
+	public AntiAliasedPerspectiveCamera(Scene scene, Vector3 position, Vector3 direction, double scale) {
+		super(scene, position, direction, scale);
 	}
 	
 	@Override
