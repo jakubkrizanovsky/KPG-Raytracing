@@ -65,12 +65,12 @@ public class Main extends JFrame {
 	}
 	
 	private static void createScene(Scene scene) {
-		Sphere sphere = new Sphere(new Vector3(-2, 0.5, 2), 1, new Material(Color.GREEN));
-		Sphere sphere2 = new Sphere(new Vector3(0, 0.5, 1), 1, new Material(Color.ORANGE, 1));
-		Sphere sphere3 = new Sphere(new Vector3(2, 1, 1), 2, new Material(Color.WHITE));
-		Sphere sphere4 = new Sphere(new Vector3(2, 0.1, -1), 0.2, new Material(Color.BLUE));
-		Plane plane = new Plane(Vector3.ZERO, Vector3.UP, 10, new Material(Color.WHITE));
-		Plane plane2 = new Plane(new Vector3(0, 0, 5), Vector3.BACK, 10, new Material(Color.WHITE));
+		Sphere sphere = new Sphere(new Transform(new Vector3(-2, 0.5, 2), 1), new Material(Color.GREEN));
+		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 1));
+		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE));
+		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE));
+		Plane plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE));
+		Plane plane2 = new Plane(new Transform(new Vector3(0, 0, 5), 10, Vector3.UP), new Material(Color.WHITE));
 		
 		scene.objects.add(sphere);
 		scene.objects.add(sphere2);

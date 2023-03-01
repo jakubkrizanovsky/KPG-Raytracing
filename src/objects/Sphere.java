@@ -1,5 +1,6 @@
 package objects;
 import components.Material;
+import components.Transform;
 import misc.Ray;
 import misc.RaycastHit;
 import misc.Vector3;
@@ -8,24 +9,19 @@ public class Sphere extends GameObject {
 	
 	private double radius;
 	
-	public Sphere(Vector3 position, double scale) {
-		this(position, scale, Material.DEFAULT);
+	public Sphere(Transform transform) {
+		this(transform, Material.DEFAULT);
 	}
 	
-	public Sphere(Vector3 position, double scale, Material material) {
-		super(position, scale, material);
-		this.radius = scale / 2;
+	public Sphere(Transform transform, Material material) {
+		super(transform, material);
+		this.radius = transform.scale / 2;
 	}
 
 	@Override
 	public RaycastHit rayIntersect(Ray ray) {
-		//P = O + t*ray.direction 
-		//(S - P)(S - P) = R^2
-		//(S - O - t*ray.dir)(S - O - t*ray.dir) = R^2
-		//(O - S + t*D)(O - S + t*D) = R^2
-		//D^2*t*t + 2*(O-S)*t*D + (O - S)(O - S) - R^2 = 0
 		
-		Vector3 diff = this.position.subtract(ray.origin);
+		Vector3 diff = transform.position.subtract(ray.origin);
 		
 		double a = ray.direction.dotProduct(ray.direction);
 		double b = -2 * diff.dotProduct(ray.direction);
@@ -60,7 +56,7 @@ public class Sphere extends GameObject {
 
 	@Override
 	public Vector3 normal(Vector3 position) {
-		return position.subtract(this.position).normalize();
+		return position.subtract(transform.position).normalize();
 	}
 
 
