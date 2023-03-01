@@ -28,6 +28,8 @@ public class Plane extends GameObject {
 		if(hitPosition.subtract(transform.position).magnitude() > transform.scale/2)
 			return null;
 		
+		 
+		
 		
 		return new RaycastHit(hitPosition, transform.up, t, this);
 	}

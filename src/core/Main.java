@@ -2,6 +2,8 @@ package core;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JFrame;
 
@@ -9,6 +11,7 @@ import camera.AntiAliasedPerspectiveCamera;
 import camera.Camera;
 import components.Material;
 import components.Transform;
+import misc.Constants;
 import misc.Vector3;
 import objects.Plane;
 import objects.Sphere;
@@ -31,13 +34,15 @@ public class Main extends JFrame {
 	private final static int WIDTH = 1200;
 	private final static int HEIGHT = 675;
 	
-	private static final Vector3 CAMERA_ORIGIN = new Vector3(0, 1, -8);
-	private static final Vector3 CAMERA_DIRECTION = new Vector3(0, 0, 1);
+	private static final Vector3 CAMERA_ORIGIN = new Vector3(0, 1, -10);
+	private static final Vector3 CAMERA_DIRECTION = new Vector3(0, -0.5, 1);
 
 
 	public final static int MAX_BOUNCES = 10;
 	
 	public static Camera cam;
+	
+	private static Plane plane;
 	
 	
 
@@ -54,6 +59,17 @@ public class Main extends JFrame {
 		
 		Main window = new Main();
 		window.initialize();
+		
+//		Timer timer = new Timer();
+//		timer.schedule(new TimerTask() {
+//			
+//			@Override
+//			public void run() {
+//				Main.fixedUpdate();
+//			}
+//		},
+//				0,
+//				(long)(1e3/Constants.FIXED_UPDATE_FREQUENCY));
 	}
 	
 	private void initialize() {
@@ -69,8 +85,8 @@ public class Main extends JFrame {
 		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 1));
 		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE));
 		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE));
-		Plane plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE));
-		Plane plane2 = new Plane(new Transform(new Vector3(0, 0, 5), 10, Vector3.UP), new Material(Color.WHITE));
+		plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE));
+		Plane plane2 = new Plane(new Transform(new Vector3(0, 0, 5), 10, new Vector3(0, 10, 0)), new Material(Color.WHITE));
 		
 		scene.objects.add(sphere);
 		scene.objects.add(sphere2);
@@ -80,16 +96,30 @@ public class Main extends JFrame {
 		scene.objects.add(plane2);
 	}
 	
+	public static void fixedUpdate() {
+		//cam.transform.position = cam.transform.position.add(new Vector3(0, 0.004, -0.008));
+	}
+	
+	private static void update() {
+		Vector3 newPos = cam.transform.position.add(cam.transform.right.multiplyBy(0.2));
+		cam.transform = new Transform(newPos, plane.transform.position.subtract(newPos));
+
+	}
 
 	
 	public void paint(Graphics g) {
-		super.paint(g);
+		
 		
 		image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+		
+		update();
 		
 		cam.generateScene(image);
 		
 		g.drawImage(image, 0, 0, Color.BLACK, null);
+		
+		
+		this.repaint();
 	}
 
 }

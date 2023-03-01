@@ -8,7 +8,7 @@ import core.Scene;
 public abstract class Camera {
 	
 	public final Scene scene;
-	public final Transform transform;
+	public Transform transform;
 	
 	public abstract void generateScene(BufferedImage image);
 

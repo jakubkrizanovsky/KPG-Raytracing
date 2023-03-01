@@ -15,7 +15,7 @@ import objects.GameObject;
 
 public class Scene {
 	
-	private final double PHONG_CONSTANT = 0.99;
+	private final double PHONG_CONSTANT = 1;
 	
 	public final List<GameObject> objects = new LinkedList<GameObject>();
 	
@@ -23,7 +23,7 @@ public class Scene {
 	
 	private final AmbientLight ambientLight = new AmbientLight(Color.WHITE, 0);
 	
-	private final DirectionalLight directionalLight = new DirectionalLight(Color.WHITE, 1, new Vector3(0, -1, 0));
+	private final DirectionalLight directionalLight = new DirectionalLight(Color.WHITE, 1, new Vector3(1, -1, 1));
 
 	public Scene() {
 		

@@ -19,16 +19,16 @@ public class Transform {
 		this.forward = forward.normalize();
 		
 		if(this.forward.dotProduct(Vector3.UP) != 1) {
-			up = forward.crossProduct(Vector3.UP).crossProduct(this.forward);
+			up = forward.crossProduct(Vector3.UP).crossProduct(this.forward).normalize();
 		} else {
-			up = Vector3.FORWARD;
+			up = Vector3.BACK;
 		}
 
 		right = up.crossProduct(this.forward).normalize();
 	}
 	
 	public Transform(Vector3 position, Vector3 forward) {
-		this(position, 1, Vector3.FORWARD);
+		this(position, 1, forward);
 	}
 	
 	public Transform(Vector3 position, double scale) {
