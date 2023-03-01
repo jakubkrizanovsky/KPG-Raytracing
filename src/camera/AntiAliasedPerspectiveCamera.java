@@ -1,18 +1,16 @@
 package camera;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import color_blending.ColorBlender;
-
-import java.awt.Color;
-
+import components.Transform;
 import core.Scene;
-import misc.Vector3;
 
 public class AntiAliasedPerspectiveCamera extends PerspectiveCamera {
 
-	public AntiAliasedPerspectiveCamera(Scene scene, Vector3 position, Vector3 direction, double scale) {
-		super(scene, position, direction, scale);
+	public AntiAliasedPerspectiveCamera(Scene scene, Transform transform) {
+		super(scene, transform);
 	}
 	
 	@Override

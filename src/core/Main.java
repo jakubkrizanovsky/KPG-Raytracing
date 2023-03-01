@@ -2,21 +2,14 @@ package core;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JFrame;
 
 import camera.AntiAliasedPerspectiveCamera;
 import camera.Camera;
-import camera.OrthogonalCamera;
-import camera.PerspectiveCamera;
-import color_blending.ColorBlender;
 import components.Material;
-import misc.Ray;
-import misc.RaycastHit;
+import components.Transform;
 import misc.Vector3;
-import objects.GameObject;
 import objects.Plane;
 import objects.Sphere;
 
@@ -57,7 +50,7 @@ public class Main extends JFrame {
 		Scene scene = new Scene();
 		createScene(scene);
 		
-		cam = new AntiAliasedPerspectiveCamera(scene, CAMERA_ORIGIN, CAMERA_DIRECTION, 1.5e-3);
+		cam = new AntiAliasedPerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
 		
 		Main window = new Main();
 		window.initialize();
