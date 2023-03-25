@@ -24,6 +24,8 @@ public class Scene {
 	private final AmbientLight ambientLight = new AmbientLight(Color.WHITE, 0);
 	
 	private final DirectionalLight directionalLight = new DirectionalLight(Color.WHITE, 1, new Vector3(1, -1, 1));
+	
+	private final double AIR_REFTRACTION_INDEX = 1;
 
 	public Scene() {
 		
@@ -84,6 +86,22 @@ public class Scene {
 		
 		double intensity = shadowRay.direction.dotProduct(hit.normal);
 		return ColorBlender.multiplyColor(directionalLight.getColor(), intensity);
+	}
+	
+	private Color refractionRay(RaycastHit hit, boolean in) {
+		
+		return Color.BLACK;
+	}
+	
+	private Vector3 refractionVector(RaycastHit hit) {
+		Vector3 c = hit.ray.direction.normalize().crossProduct(hit.normal);
+		
+		double sinPhi1 = c.magnitude();
+		double sinPhi2 = AIR_REFTRACTION_INDEX * sinPhi1 / hit.gameObject.material.refractionIndex;
+		double tanPhi2 = sinPhi2 / Math.sqrt(1 - sinPhi2*sinPhi2);
+		
+		Vector3 r = hit.normal.crossProduct(c.normalize()).multiplyBy(tanPhi2);
+		return r.subtract(hit.position);
 	}
 
 }

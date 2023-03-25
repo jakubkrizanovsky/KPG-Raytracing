@@ -35,8 +35,8 @@ public class Sphere extends GameObject {
 		
 		if(determinant < 0) {
 			return null;
-		} else if(determinant == 0) {
-			x1 = -b / (2*a);
+//		} else if(determinant == 0) {
+//			x1 = -b / (2*a);
 		} else {
 			x1 = (-b - Math.sqrt(determinant))/(2*a);
 			x2 = (-b + Math.sqrt(determinant))/(2*a);
@@ -44,10 +44,10 @@ public class Sphere extends GameObject {
 		
 		if(x1 > MIN_HIT_DISTANCE) {
 			Vector3 position = ray.pointOnRay(x1);
-			return new RaycastHit(position, normal(position), x1, this);
+			return new RaycastHit(ray, position, normal(position), x1, this, true);
 		} else if(x2 > MIN_HIT_DISTANCE) {
 			Vector3 position = ray.pointOnRay(x2);
-			return new RaycastHit(position, normal(position), x2, this);
+			return new RaycastHit(ray, position, normal(position), x2, this, false);
 		}
 		
 		

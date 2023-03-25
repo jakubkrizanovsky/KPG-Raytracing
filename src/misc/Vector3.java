@@ -60,6 +60,10 @@ public class Vector3 {
 	public double dotProduct(Vector3 other) {
 		return x*other.x + y*other.y + z*other.z;
 	}
+	
+	public double sinAngle(Vector3 other) {
+		return this.normalize().crossProduct(other.normalize()).magnitude();
+	}
 
 	@Override
 	public String toString() {

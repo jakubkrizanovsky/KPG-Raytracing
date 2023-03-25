@@ -45,9 +45,7 @@ public class Main extends JFrame {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		
-		
+	public static void main(String[] args) {		
 		Scene scene = new Scene();
 		createScene(scene);
 		
@@ -78,7 +76,7 @@ public class Main extends JFrame {
 	
 	private static void createScene(Scene scene) {
 		Sphere sphere = new Sphere(new Transform(new Vector3(-2, 0.5, 2), 1), new Material(Color.GREEN));
-		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 1));
+		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE));
 		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE));
 		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE));
 		plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE));

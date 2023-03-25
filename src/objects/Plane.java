@@ -31,7 +31,7 @@ public class Plane extends GameObject {
 		 
 		
 		
-		return new RaycastHit(hitPosition, transform.up, t, this);
+		return new RaycastHit(ray, hitPosition, transform.up, t, this, false);
 	}
 
 	@Override
