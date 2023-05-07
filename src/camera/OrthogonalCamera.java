@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import components.Transform;
+import core.Constants;
 import core.Scene;
-import misc.Constants;
 import misc.Ray;
 import misc.Vector3;
 
@@ -36,7 +36,7 @@ public class OrthogonalCamera extends Camera {
 						.add(transform.up.multiplyBy(-y*yDiff));
 				
 				Ray ray = new Ray(pixelPosition, transform.forward);
-				Color color = scene.reflectionRay(ray, Constants.MAX_BOUNCES);
+				Color color = scene.reflectionRay(ray);
 				
 				image.setRGB(x, y, color.getRGB());
 			}

@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 import components.Transform;
+import core.Constants;
 import core.Scene;
-import misc.Constants;
 import misc.Ray;
 import misc.Vector3;
 
@@ -52,7 +52,7 @@ public class ParallelPerspectiveCamera extends Camera {
 		
 		Arrays.stream(rays).parallel().forEach((col) -> {
 			Arrays.stream(col).parallel().forEach((ray) -> {
-				Color color = scene.reflectionRay(ray, Constants.MAX_BOUNCES);
+				Color color = scene.reflectionRay(ray);
 				ray.col = color.getRGB();
 			});
 		});

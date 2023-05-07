@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 
 import camera.AntiAliasedPerspectiveCamera;
 import camera.Camera;
+import camera.OrthogonalCamera;
 import camera.PerspectiveCamera;
 import components.Material;
 import components.Transform;
@@ -36,6 +37,7 @@ public class Main extends JFrame {
 	private final static int HEIGHT = 675;
 	
 	private static final Vector3 CAMERA_ORIGIN = new Vector3(0, 2, -10);
+	private static final Vector3 ORTHOGONAL_CAMERA_ORIGIN = new Vector3(0, 4, -20);
 	private static final Vector3 CAMERA_DIRECTION = new Vector3(0, -0.1, 1);
 
 	public static Camera cam;
@@ -53,6 +55,7 @@ public class Main extends JFrame {
 		
 		cam = new AntiAliasedPerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
 		//cam = new PerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
+		//cam = new OrthogonalCamera(scene, new Transform(ORTHOGONAL_CAMERA_ORIGIN, 10, CAMERA_DIRECTION));
 		exportImage();
 
 		
@@ -70,8 +73,8 @@ public class Main extends JFrame {
 	}
 	
 	private static void createScene(Scene scene) {
-		Sphere sphere = new Sphere(new Transform(new Vector3(-2, 0.5, 2), 1), new Material(Color.GREEN, 1.52, 0));
-		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 1.52));
+		Sphere sphere = new Sphere(new Transform(new Vector3(-2, 0.5, 2), 1), new Material(Color.GREEN, 1.02, 0));
+		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 1.02));
 		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE, 1.02, 0.1));
 		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE, 1.52));
 		Sphere sphere5 = new Sphere(new Transform(new Vector3(0, 0.3, 0), 0.6), new Material(Color.RED, 1.52, 0.3));
@@ -98,10 +101,10 @@ public class Main extends JFrame {
 	private static void update() {
 		//Move camera slightly to the right
 		Vector3 newPos = cam.transform.position.add(cam.transform.right.multiplyBy(0.3));
-		cam.transform = new Transform(newPos, plane.transform.position.subtract(newPos));
+		cam.transform = new Transform(newPos, cam.transform.scale ,plane.transform.position.subtract(newPos));
 		
 		//Make camera look at plane center
-		cam.transform = new Transform(cam.transform.position, plane.transform.position.subtract(cam.transform.position));
+		cam.transform = new Transform(cam.transform.position, cam.transform.scale, plane.transform.position.subtract(cam.transform.position));
 	}
 
 	

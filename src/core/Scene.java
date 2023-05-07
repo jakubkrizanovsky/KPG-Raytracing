@@ -8,15 +8,12 @@ import color_blending.ColorBlender;
 import light.AmbientLight;
 import light.DirectionalLight;
 import light.Light;
-import misc.Constants;
 import misc.Ray;
 import misc.RaycastHit;
 import misc.Vector3;
 import objects.GameObject;
 
 public class Scene {
-	
-	private final double PHONG_CONSTANT = 0.999;
 	
 	public final List<GameObject> objects = new LinkedList<GameObject>();
 	
@@ -28,6 +25,10 @@ public class Scene {
 
 	public Scene() {
 		
+	}
+	
+	public Color reflectionRay(Ray ray) {
+		return reflectionRay(ray, Constants.MAX_BOUNCES, false);
 	}
 
 	public Color reflectionRay(Ray ray, int recursive, boolean isRefraction) {
@@ -46,16 +47,13 @@ public class Scene {
 		}
 		
 		if(hit == null) {
-			//return ambientLight.getColor();
-			return Color.BLACK;
+			double phongIntensity = directionalLight.direction.opposite().dotProduct(ray.direction);
 			
-//			double phongIntensity = directionalLight.direction.opposite().dotProduct(ray.direction);
-//			
-//			if(phongIntensity > PHONG_CONSTANT) {
-//				return ColorBlender.multiplyColor(directionalLight.getColor(), (phongIntensity - PHONG_CONSTANT) / (1 - PHONG_CONSTANT));
-//			} else {
-//				return Color.BLACK;
-//			}
+			if(phongIntensity > Constants.PHONG_CONSTANT) {
+				return ColorBlender.multiplyColor(directionalLight.getColor(), (phongIntensity - Constants.PHONG_CONSTANT) / (1 - Constants.PHONG_CONSTANT));
+			} else {
+				return Color.BLACK;
+			}
 			
 		} else {
 			
