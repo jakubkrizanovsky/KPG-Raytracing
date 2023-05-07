@@ -2,7 +2,10 @@ package core;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import camera.AntiAliasedPerspectiveCamera;
@@ -10,7 +13,6 @@ import camera.Camera;
 import camera.PerspectiveCamera;
 import components.Material;
 import components.Transform;
-import misc.Ray;
 import misc.Vector3;
 import objects.Plane;
 import objects.Sphere;
@@ -33,10 +35,8 @@ public class Main extends JFrame {
 	private final static int WIDTH = 1200;
 	private final static int HEIGHT = 675;
 	
-	private static final Vector3 CAMERA_ORIGIN = new Vector3(0, 1, -7);
-	private static final Vector3 CAMERA_DIRECTION = new Vector3(0, -0.5, 1);
-
-
+	private static final Vector3 CAMERA_ORIGIN = new Vector3(0, 2, -10);
+	private static final Vector3 CAMERA_DIRECTION = new Vector3(0, -0.1, 1);
 
 	public static Camera cam;
 	
@@ -53,22 +53,12 @@ public class Main extends JFrame {
 		
 		cam = new AntiAliasedPerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
 		//cam = new PerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
+		exportImage();
 
 		
 		//System.out.println(scene.reflectionRay(new Ray(new Vector3(0, 0.75, -5), Vector3.FORWARD), 5, false));
 		Main window = new Main();
 		window.initialize();
-		
-//		Timer timer = new Timer();
-//		timer.schedule(new TimerTask() {
-//			
-//			@Override
-//			public void run() {
-//				Main.fixedUpdate();
-//			}
-//		},
-//				0,
-//				(long)(1e3/Constants.FIXED_UPDATE_FREQUENCY));
 	}
 	
 	private void initialize() {
@@ -105,16 +95,13 @@ public class Main extends JFrame {
 		scene.objects.add(sphere);
 	}
 	
-	public static void fixedUpdate() {
-		//cam.transform.position = cam.transform.position.add(new Vector3(0, 0.004, -0.008));
-	}
-	
 	private static void update() {
+		//Move camera slightly to the right
 		Vector3 newPos = cam.transform.position.add(cam.transform.right.multiplyBy(0.3));
 		cam.transform = new Transform(newPos, plane.transform.position.subtract(newPos));
+		
+		//Make camera look at plane center
 		cam.transform = new Transform(cam.transform.position, plane.transform.position.subtract(cam.transform.position));
-
-
 	}
 
 	
@@ -127,12 +114,24 @@ public class Main extends JFrame {
 		
 		long start = System.nanoTime();
 		cam.generateScene(image);
-		System.out.println((System.nanoTime() - start)*1e-9 + " s");
+		//System.out.println((System.nanoTime() - start)*1e-9 + " s");
 		
 		g.drawImage(image, 0, 0, Color.BLACK, null);
 		
 		
 		this.repaint();
+	}
+	
+	private static void exportImage() {
+		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
+		cam.generateScene(image);
+		try {
+			File outputfile = new File("output.png");
+			ImageIO.write(image, "png", outputfile);
+		} catch(IOException ex) {
+			System.out.println("Could not create output image");
+			System.out.println(ex);
+		}
 	}
 
 }
