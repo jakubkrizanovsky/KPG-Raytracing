@@ -39,7 +39,7 @@ public class PerspectiveCamera extends Camera {
 						.add(transform.up.multiplyBy(-y*yDiff));
 				
 				Ray ray = new Ray(transform.position, pixelPosition.subtract(transform.position));
-				Color color = scene.reflectionRay(ray, Constants.MAX_BOUNCES);
+				Color color = scene.reflectionRay(ray, Constants.MAX_BOUNCES, false);
 				
 				image.setRGB(x, y, color.getRGB());
 			}

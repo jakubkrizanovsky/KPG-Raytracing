@@ -12,10 +12,18 @@ public class Material {
 	public static final Material DEFAULT = new Material(Color.WHITE);
 	
 	public Material(Color color) {
-		this(color, 1, 1, 1);
+		this(color, 1);
 	}
 	
-	public Material(Color color, double metallicity, double opacity, double refractionIndex) {
+	public Material(Color color, double refractionIndex) {
+		this(color, refractionIndex, 1);
+	}
+	
+	public Material(Color color, double refractionIndex, double opacity) {
+		this(color, refractionIndex, opacity, 1);
+	}
+	
+	public Material(Color color, double refractionIndex, double opacity, double metallicity) {
 		this.color = color;
 		this.metallicity = metallicity;
 		this.opacity = opacity;

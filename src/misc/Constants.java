@@ -6,7 +6,7 @@ public class Constants {
 	
 	public static final double PIXEL_SCALE = 1e-3;
 	
-	public static final int MAX_BOUNCES = 10;
+	public static final int MAX_BOUNCES = 7;
 	
 	public static final double AIR_REFRACTION_INDEX = 1;
 	

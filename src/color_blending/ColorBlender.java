@@ -2,6 +2,8 @@ package color_blending;
 
 import java.awt.Color;
 
+import misc.Vector3;
+
 public class ColorBlender {
 	
 	public static Color blendColors(Color color1, Color color2, BlendMode blendMode) {
@@ -64,6 +66,15 @@ public class ColorBlender {
 	
 	private static int saturate(double d) {
 		return (int)Math.min(255, Math.max(0, d));
+	}
+	
+	public static Color colorFromVector3(Vector3 vector) {
+		Vector3 vectorNormalized = vector.normalize();
+		int r = (int)(Math.max(0, 255 * vectorNormalized.x));
+		int g = (int)(Math.max(0, 255 * vectorNormalized.y));
+		int b = (int)(Math.max(0, 255 * vectorNormalized.z));
+		
+		return new Color(r, g, b);
 	}
 	
 }
