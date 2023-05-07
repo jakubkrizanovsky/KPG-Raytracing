@@ -43,6 +43,8 @@ public class Main extends JFrame {
 	public static Camera cam;
 	
 	private static Plane plane;
+
+	private long lastTime;
 	
 	
 
@@ -65,6 +67,7 @@ public class Main extends JFrame {
 	}
 	
 	private void initialize() {
+		lastTime = System.nanoTime();
 		this.setTitle("Raytracing scene");
 		this.setSize(WIDTH, HEIGHT);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);	
@@ -98,9 +101,9 @@ public class Main extends JFrame {
 		scene.objects.add(sphere);
 	}
 	
-	private static void update() {
+	private static void update(double deltaTime) {
 		//Move camera slightly to the right
-		Vector3 newPos = cam.transform.position.add(cam.transform.right.multiplyBy(0.3));
+		Vector3 newPos = cam.transform.position.add(cam.transform.right.multiplyBy(0.5 * deltaTime));
 		cam.transform = new Transform(newPos, cam.transform.scale ,plane.transform.position.subtract(newPos));
 		
 		//Make camera look at plane center
@@ -109,18 +112,17 @@ public class Main extends JFrame {
 
 	
 	public void paint(Graphics g) {
-		
-		
 		image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 		
-		update();
+		double timeDelta = (System.nanoTime() - lastTime)*1e-9;
+		lastTime = System.nanoTime();
+		System.out.println(timeDelta + " s");
 		
-		long start = System.nanoTime();
+		update(timeDelta);
+		
 		cam.generateScene(image);
-		//System.out.println((System.nanoTime() - start)*1e-9 + " s");
 		
 		g.drawImage(image, 0, 0, Color.BLACK, null);
-		
 		
 		this.repaint();
 	}
