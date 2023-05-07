@@ -33,8 +33,7 @@ public class Vector3 {
 	}
 
 	public Vector3 normalize() {
-		double magnitude = magnitude();
-		return multiplyBy(1/magnitude);
+		return multiplyBy(1/magnitude());
 	}
 	
 	public Vector3 bounce(Vector3 normal) {

@@ -58,18 +58,25 @@ public class Scene {
 		} else {
 			
 //			if(true) {
-//				return ColorBlender.colorFromVector3(refractionVector(hit, isRefraction));
+//				return ColorBlender.colorFromVector3(refractionVector2(hit, !isRefraction).opposite());
+//			}
+			
+//			if(true) {
+//				return ColorBlender.colorFromVector3(hit.normal);
 //			}
 			
 			Color light = Color.BLACK;
+				
+			//Lambert + Ambient light
+			light = ColorBlender.addColors(light, ambientLight.getColor());
+			light = ColorBlender.addColors(light, shadowRay(hit));
+
+			//Multiply light by material color
+			light = ColorBlender.multiplyColors(light, hit.gameObject.material.color);
+			light = ColorBlender.multiplyColor(light, hit.gameObject.material.opacity);
 			
-			//Reflected light
-			Ray reflectionRay = new Ray(hit.position, ray.direction.bounce(hit.normal));
-			double reflectionIntensity = Math.max(0, reflectionRay.direction.dotProduct(hit.normal));
-			//reflectionIntensity = 1;
-			Color reflectedLight = reflectionRay(reflectionRay, recursive-1, isRefraction);
-			reflectedLight = ColorBlender.multiplyColor(reflectedLight, reflectionIntensity*hit.gameObject.material.opacity);
-			reflectedLight = ColorBlender.multiplyColors(reflectedLight, ColorBlender.multiplyColor(hit.gameObject.material.color, hit.gameObject.material.metallicity));
+			
+			Color reflectedAndRefractedLight = Color.BLACK;
 			
 			//Refracted light
 			Ray refractionRay = new Ray(hit.position, refractionVector2(hit, !isRefraction));
@@ -77,21 +84,19 @@ public class Scene {
 			double refractionIntensity = 1;
 			Color refractedLight = reflectionRay(refractionRay, recursive-1, !isRefraction);
 			refractedLight = ColorBlender.multiplyColor(refractedLight, refractionIntensity*(1-hit.gameObject.material.opacity));
+			reflectedAndRefractedLight = ColorBlender.addColors(reflectedAndRefractedLight, refractedLight);
 			
-			if(!isRefraction) {
-				light = reflectedLight;
-				//Lambert + Ambient light
-				light = ColorBlender.addColors(light, ambientLight.getColor());
-				light = ColorBlender.addColors(light, shadowRay(hit));
-				
-				//Multiply light by material color
-				light = ColorBlender.multiplyColors(light, hit.gameObject.material.color);
-				
-				//light = ColorBlender.multiplyColor(light, hit.gameObject.material.opacity);
-			}
+			//Reflected light
+			Ray reflectionRay = new Ray(hit.position, ray.direction.bounce(hit.normal));
+			double reflectionIntensity = Math.max(0, reflectionRay.direction.dotProduct(hit.normal));
+			Color reflectedLight = reflectionRay(reflectionRay, recursive-1, isRefraction);
+			reflectedLight = ColorBlender.multiplyColor(reflectedLight, reflectionIntensity*hit.gameObject.material.opacity);
+			reflectedAndRefractedLight = ColorBlender.addColors(reflectedAndRefractedLight, reflectedLight);
+		
+			//Multiply by material color and metallicity
+			reflectedAndRefractedLight = ColorBlender.multiplyColors(reflectedAndRefractedLight, ColorBlender.multiplyColor(hit.gameObject.material.color, hit.gameObject.material.metallicity));
 			
-			light = ColorBlender.addColors(light, refractedLight);
-			light = ColorBlender.addColors(light, reflectedLight);
+			light = ColorBlender.addColors(light, reflectedAndRefractedLight);
 			
 			return light;
 		}
@@ -125,7 +130,7 @@ public class Scene {
 			n2 = hit.gameObject.material.refractionIndex;
 			normal = hit.normal;
 		}
-		Vector3 c = hit.ray.direction.normalize().crossProduct(normal);
+		Vector3 c = hit.ray.direction.crossProduct(normal);
 		
 		double sinPhi1 = c.magnitude();
 		double sinPhi2 = n1 * sinPhi1 / n2;
@@ -134,7 +139,7 @@ public class Scene {
 		
 		Vector3 r = normal.crossProduct(c.normalize()).multiplyBy(tanPhi2);
 		//System.out.println("OUT: " + normal.opposite().add(r));
-		return normal.opposite().add(r);
+		return normal.opposite().add(r).normalize();
 	}
 	
 	private Vector3 refractionVector2(RaycastHit hit, boolean isExiting) {
@@ -153,6 +158,7 @@ public class Scene {
 		double c = - normal.dotProduct(hit.ray.direction);
 		double r = n1/n2;
 		Vector3 s = normal.multiplyBy(r*c + Math.sqrt(1 - r*r*(1 - c*c)));
+
 		return hit.ray.direction.multiplyBy(r).add(s);
 	}
 

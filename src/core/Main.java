@@ -76,7 +76,7 @@ public class Main extends JFrame {
 	}
 	
 	private static void createScene(Scene scene) {
-		Sphere sphere = new Sphere(new Transform(new Vector3(-2, 0.5, 2), 1), new Material(Color.GREEN, 1.02, 0));
+		Sphere sphere = new Sphere(new Transform(new Vector3(-2, 0.5, 2), 1), new Material(Color.GREEN, 1.02, 1));
 		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 1.02));
 		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE, 1.02, 0.1));
 		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE, 1.52));
@@ -103,7 +103,7 @@ public class Main extends JFrame {
 	
 	private static void update(double deltaTime) {
 		//Move camera slightly to the right
-		Vector3 newPos = cam.transform.position.add(cam.transform.right.multiplyBy(0.5 * deltaTime));
+		Vector3 newPos = cam.transform.position.add(cam.transform.right.multiplyBy(deltaTime));
 		cam.transform = new Transform(newPos, cam.transform.scale ,plane.transform.position.subtract(newPos));
 		
 		//Make camera look at plane center

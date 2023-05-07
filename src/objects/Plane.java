@@ -2,6 +2,7 @@ package objects;
 
 import components.Material;
 import components.Transform;
+import core.Constants;
 import misc.Ray;
 import misc.RaycastHit;
 import misc.Vector3;
@@ -20,7 +21,7 @@ public class Plane extends GameObject {
 		
 		double t = transform.position.subtract(ray.origin).dotProduct(transform.up) / rayDirDotPlaneNormal;
 		
-		if(t < MIN_HIT_DISTANCE)
+		if(t < Constants.MIN_HIT_DISTANCE)
 			return null;
 		
 		Vector3 hitPosition = ray.pointOnRay(t);

@@ -8,6 +8,8 @@ public class Constants {
 	
 	public static final int MAX_BOUNCES = 7;
 	
+	public final static double MIN_HIT_DISTANCE = 1e-3;
+	
 	public static final double AIR_REFRACTION_INDEX = 1;
 	
 	public static final double PHONG_CONSTANT = 0.95;
