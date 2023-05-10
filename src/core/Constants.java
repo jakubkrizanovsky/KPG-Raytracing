@@ -14,7 +14,8 @@ public class Constants {
 	
 	public static final double SPECULAR_CONSTANT = 0.95;
 	
+	public static final String RESOURCES_FOLDER_PATH = "Resources/";
 	
-	public static final int FIXED_UPDATE_FREQUENCY = 60;
+	public static final String TEXTURES_FOLDER_PATH = RESOURCES_FOLDER_PATH + "Textures/";
 
 }

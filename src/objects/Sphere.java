@@ -4,6 +4,7 @@ import components.Transform;
 import core.Constants;
 import misc.Ray;
 import misc.RaycastHit;
+import misc.Vector2;
 import misc.Vector3;
 
 public class Sphere extends GameObject {
@@ -45,10 +46,10 @@ public class Sphere extends GameObject {
 		
 		if(x1 > Constants.MIN_HIT_DISTANCE) {
 			Vector3 position = ray.pointOnRay(x1);
-			return new RaycastHit(ray, position, normal(position), x1, this);
+			return new RaycastHit(ray, position, normal(position), x1, this, Vector2.ZERO); //TODO
 		} else if(x2 > Constants.MIN_HIT_DISTANCE) {
 			Vector3 position = ray.pointOnRay(x2);
-			return new RaycastHit(ray, position, normal(position), x2, this);
+			return new RaycastHit(ray, position, normal(position), x2, this, Vector2.ZERO); //TODO
 		}
 		
 		

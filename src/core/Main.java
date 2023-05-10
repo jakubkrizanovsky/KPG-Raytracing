@@ -11,7 +11,9 @@ import javax.swing.JFrame;
 import camera.AntiAliasedPerspectiveCamera;
 import camera.Camera;
 import components.Material;
+import components.Texture;
 import components.Transform;
+import misc.ImageLoader;
 import misc.Ray;
 import misc.Vector3;
 import objects.Plane;
@@ -82,8 +84,9 @@ public class Main extends JFrame {
 		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE, 1.02));
 		Sphere sphere5 = new Sphere(new Transform(new Vector3(0, 0.3, 0), 0.6), new Material(Color.RED, 1.02, 0.3));
 		Sphere sphere6 = new Sphere(new Transform(new Vector3(-3, 1.5, -2), 3), new Material(Color.CYAN, 1.04, 0.01));
-		plane = new Plane(new Transform(Vector3.ZERO, 1000, Vector3.FORWARD), new Material(Color.WHITE, 1));
+		plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE, 1));
 		Plane plane2 = new Plane(new Transform(new Vector3(0, 0, 15), 20, new Vector3(0, 10, 0)), new Material(Color.WHITE));
+		plane.material.texture = new Texture(ImageLoader.loadImage("checkered.jpg"));
 		
 		scene.objects.add(sphere);
 		scene.objects.add(sphere2);
@@ -92,7 +95,7 @@ public class Main extends JFrame {
 		scene.objects.add(sphere5);
 		scene.objects.add(sphere6);
 		scene.objects.add(plane);
-		//scene.objects.add(plane2);
+		scene.objects.add(plane2);
 	}
 	
 	private static void createScene2(Scene scene) {
@@ -101,6 +104,15 @@ public class Main extends JFrame {
 		
 		scene.objects.add(plane);
 		scene.objects.add(sphere);
+	}
+	
+	private static void createScene3(Scene scene) {
+		plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE, 1));
+		plane.material.texture = new Texture(ImageLoader.loadImage("checkered.jpg"));
+		//Sphere sphere = new Sphere(new Transform(new Vector3(0, 0.5, -1), 1), new Material(Color.WHITE, 1.52, 0.5));
+		
+		scene.objects.add(plane);
+		//scene.objects.add(sphere);
 	}
 	
 	private static void update(double deltaTime) {
@@ -125,6 +137,7 @@ public class Main extends JFrame {
 		cam.generateScene(image);
 		
 		g.drawImage(image, 0, 0, Color.BLACK, null);
+
 		
 		this.repaint();
 	}

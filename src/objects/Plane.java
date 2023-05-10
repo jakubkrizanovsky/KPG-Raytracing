@@ -5,6 +5,7 @@ import components.Transform;
 import core.Constants;
 import misc.Ray;
 import misc.RaycastHit;
+import misc.Vector2;
 import misc.Vector3;
 
 public class Plane extends GameObject {
@@ -30,9 +31,12 @@ public class Plane extends GameObject {
 			return null;
 		
 		 
+		Vector2 uv = new Vector2(
+				(hitPosition.x - transform.position.x) / transform.scale,
+				(hitPosition.z - transform.position.z) / transform.scale
+				).add(Vector2.ONE.multiplyBy(0.5));
 		
-		
-		return new RaycastHit(ray, hitPosition, transform.up, t, this);
+		return new RaycastHit(ray, hitPosition, transform.up, t, this, uv);
 	}
 
 	@Override

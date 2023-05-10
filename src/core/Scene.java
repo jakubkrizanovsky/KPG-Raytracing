@@ -72,7 +72,7 @@ public class Scene {
 			light = ColorBlender.addColors(light, shadowRay(hit));
 
 			//Multiply light by material color
-			light = ColorBlender.multiplyColors(light, hit.gameObject.material.color);
+			light = ColorBlender.multiplyColors(light, hit.gameObject.material.getColor(hit.uv));
 			light = ColorBlender.multiplyColor(light, hit.gameObject.material.opacity);
 			
 			
@@ -98,7 +98,7 @@ public class Scene {
 			}
 			
 			//Multiply by material color and metallicity
-			reflectedAndRefractedLight = ColorBlender.multiplyColors(reflectedAndRefractedLight, ColorBlender.multiplyColor(hit.gameObject.material.color, hit.gameObject.material.metallicity));
+			reflectedAndRefractedLight = ColorBlender.multiplyColors(reflectedAndRefractedLight, ColorBlender.multiplyColor(hit.gameObject.material.getColor(hit.uv), hit.gameObject.material.metallicity));
 			
 			light = ColorBlender.addColors(light, reflectedAndRefractedLight);
 			

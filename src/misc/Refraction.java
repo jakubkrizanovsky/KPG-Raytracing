@@ -41,7 +41,7 @@ public class Refraction {
 		Rp *= Rp;
 		double R = 0.5*(Rs + Rp);
 
-		this.reflexionCoefficient = Math.max(0, Math.min(1, R + hit.gameObject.material.opacity));
+		this.reflexionCoefficient = Util.clamp(R + hit.gameObject.material.opacity, 0, 1);
 		this.refractionCoefficient = 1 - reflexionCoefficient;
 	}
 }

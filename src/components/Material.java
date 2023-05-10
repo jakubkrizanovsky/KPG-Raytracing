@@ -1,13 +1,15 @@
 package components;
 import java.awt.Color;
 
+import misc.Vector2;
+
 public class Material {
 
-	public final Color color;
+	private final Color color;
+	public Texture texture;
 	public final double metallicity;
 	public final double opacity;
 	public final double refractionIndex;
-
 	
 	public static final Material DEFAULT = new Material(Color.WHITE);
 	
@@ -28,5 +30,13 @@ public class Material {
 		this.metallicity = metallicity;
 		this.opacity = opacity;
 		this.refractionIndex = refractionIndex;
+	}
+	
+	public Color getColor(Vector2 uv) {
+		if(texture != null) {
+			return texture.ColorAt(uv);
+		} else {
+			return color;
+		}
 	}
 }
