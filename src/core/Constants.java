@@ -12,7 +12,7 @@ public class Constants {
 	
 	public static final double AIR_REFRACTION_INDEX = 1;
 	
-	public static final double PHONG_CONSTANT = 0.95;
+	public static final double SPECULAR_CONSTANT = 0.95;
 	
 	
 	public static final int FIXED_UPDATE_FREQUENCY = 60;

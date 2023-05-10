@@ -45,10 +45,10 @@ public class Sphere extends GameObject {
 		
 		if(x1 > Constants.MIN_HIT_DISTANCE) {
 			Vector3 position = ray.pointOnRay(x1);
-			return new RaycastHit(ray, position, normal(position), x1, this, true);
+			return new RaycastHit(ray, position, normal(position), x1, this);
 		} else if(x2 > Constants.MIN_HIT_DISTANCE) {
 			Vector3 position = ray.pointOnRay(x2);
-			return new RaycastHit(ray, position, normal(position), x2, this, false);
+			return new RaycastHit(ray, position, normal(position), x2, this);
 		}
 		
 		

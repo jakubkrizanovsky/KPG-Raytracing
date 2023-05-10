@@ -10,10 +10,9 @@ import javax.swing.JFrame;
 
 import camera.AntiAliasedPerspectiveCamera;
 import camera.Camera;
-import camera.OrthogonalCamera;
-import camera.PerspectiveCamera;
 import components.Material;
 import components.Transform;
+import misc.Ray;
 import misc.Vector3;
 import objects.Plane;
 import objects.Sphere;
@@ -58,10 +57,11 @@ public class Main extends JFrame {
 		cam = new AntiAliasedPerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
 		//cam = new PerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
 		//cam = new OrthogonalCamera(scene, new Transform(ORTHOGONAL_CAMERA_ORIGIN, 10, CAMERA_DIRECTION));
-		exportImage();
+		//exportImage();
 
 		
 		//System.out.println(scene.reflectionRay(new Ray(new Vector3(0, 0.75, -5), Vector3.FORWARD), 5, false));
+		//System.out.println(scene.reflectionRay(new Ray(new Vector3(2, 0.75, -5), Vector3.FORWARD)));
 		Main window = new Main();
 		window.initialize();
 	}
@@ -79,10 +79,10 @@ public class Main extends JFrame {
 		Sphere sphere = new Sphere(new Transform(new Vector3(-2, 0.5, 2), 1), new Material(Color.GREEN, 1.02, 1));
 		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 1.02));
 		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE, 1.02, 0.1));
-		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE, 1.52));
-		Sphere sphere5 = new Sphere(new Transform(new Vector3(0, 0.3, 0), 0.6), new Material(Color.RED, 1.52, 0.3));
+		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE, 1.02));
+		Sphere sphere5 = new Sphere(new Transform(new Vector3(0, 0.3, 0), 0.6), new Material(Color.RED, 1.02, 0.3));
 		plane = new Plane(new Transform(Vector3.ZERO, 1000, Vector3.FORWARD), new Material(Color.WHITE, 1));
-		Plane plane2 = new Plane(new Transform(new Vector3(0, 5, 6), 10, new Vector3(0, 10, 0)), new Material(Color.WHITE));
+		Plane plane2 = new Plane(new Transform(new Vector3(0, 0, 7), 20, new Vector3(0, 10, 0)), new Material(Color.WHITE));
 		
 		scene.objects.add(sphere);
 		scene.objects.add(sphere2);

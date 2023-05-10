@@ -10,6 +10,7 @@ import light.DirectionalLight;
 import light.Light;
 import misc.Ray;
 import misc.RaycastHit;
+import misc.Refraction;
 import misc.Vector3;
 import objects.GameObject;
 
@@ -47,19 +48,18 @@ public class Scene {
 		}
 		
 		if(hit == null) {
-			double phongIntensity = directionalLight.direction.opposite().dotProduct(ray.direction);
+			double specularIntensity = directionalLight.direction.opposite().dotProduct(ray.direction);
 			
-			if(phongIntensity > Constants.PHONG_CONSTANT) {
-				return ColorBlender.multiplyColor(directionalLight.getColor(), (phongIntensity - Constants.PHONG_CONSTANT) / (1 - Constants.PHONG_CONSTANT));
+			
+			if(specularIntensity > Constants.SPECULAR_CONSTANT) {
+				return ColorBlender.multiplyColor(directionalLight.getColor(), (specularIntensity - Constants.SPECULAR_CONSTANT) / (1 - Constants.SPECULAR_CONSTANT));
 			} else {
 				return Color.BLACK;
 			}
 			
+			
 		} else {
 			
-//			if(true) {
-//				return ColorBlender.colorFromVector3(refractionVector2(hit, !isRefraction).opposite());
-//			}
 			
 //			if(true) {
 //				return ColorBlender.colorFromVector3(hit.normal);
@@ -76,23 +76,28 @@ public class Scene {
 			light = ColorBlender.multiplyColor(light, hit.gameObject.material.opacity);
 			
 			
+			//Reflected and refracted light
 			Color reflectedAndRefractedLight = Color.BLACK;
+			Refraction refraction = new Refraction(hit);
 			
-			//Refracted light
-			Ray refractionRay = new Ray(hit.position, refractionVector2(hit, !isRefraction));
-			//double refractionIntensity = Math.max(0, refractionRay.direction.dotProduct(hit.normal.opposite()));
-			double refractionIntensity = 1;
-			Color refractedLight = reflectionRay(refractionRay, recursive-1, !isRefraction);
-			refractedLight = ColorBlender.multiplyColor(refractedLight, refractionIntensity*(1-hit.gameObject.material.opacity));
-			reflectedAndRefractedLight = ColorBlender.addColors(reflectedAndRefractedLight, refractedLight);
+			double reflectionIntensity = refraction.reflexionCoefficient * hit.gameObject.material.opacity;
+			double refractionIntensity = (1 - refraction.reflexionCoefficient) * (1 - hit.gameObject.material.opacity);
 			
+			if(refractionIntensity > 0) {
+				//Refracted light
+				Ray refractionRay = new Ray(hit.position, refraction.vector);
+				Color refractedLight = reflectionRay(refractionRay, recursive-1, !isRefraction);
+				refractedLight = ColorBlender.multiplyColor(refractedLight, refractionIntensity);
+				reflectedAndRefractedLight = ColorBlender.addColors(reflectedAndRefractedLight, refractedLight);
+			} else {
+				reflectionIntensity = hit.gameObject.material.opacity;
+			}
 			//Reflected light
 			Ray reflectionRay = new Ray(hit.position, ray.direction.bounce(hit.normal));
-			double reflectionIntensity = Math.max(0, reflectionRay.direction.dotProduct(hit.normal));
 			Color reflectedLight = reflectionRay(reflectionRay, recursive-1, isRefraction);
-			reflectedLight = ColorBlender.multiplyColor(reflectedLight, reflectionIntensity*hit.gameObject.material.opacity);
-			reflectedAndRefractedLight = ColorBlender.addColors(reflectedAndRefractedLight, reflectedLight);
-		
+			reflectedLight = ColorBlender.multiplyColor(reflectedLight, reflectionIntensity);
+			reflectedAndRefractedLight = ColorBlender.addColors(reflectedAndRefractedLight, reflectedLight);	
+			
 			//Multiply by material color and metallicity
 			reflectedAndRefractedLight = ColorBlender.multiplyColors(reflectedAndRefractedLight, ColorBlender.multiplyColor(hit.gameObject.material.color, hit.gameObject.material.metallicity));
 			
@@ -111,55 +116,8 @@ public class Scene {
 				return Color.BLACK;
 			}
 		}
-
 		
 		double intensity = shadowRay.direction.dotProduct(hit.normal);
 		return ColorBlender.multiplyColor(directionalLight.getColor(), intensity);
 	}
-	
-	private Vector3 refractionVector(RaycastHit hit, boolean isExiting) {
-		//System.out.println("IN: " + hit.ray.direction);
-		double n1, n2;
-		Vector3 normal;
-		if(isExiting) {
-			n1 = hit.gameObject.material.refractionIndex;
-			n2 = Constants.AIR_REFRACTION_INDEX;
-			normal = hit.normal.opposite();
-		} else {
-			n1 = Constants.AIR_REFRACTION_INDEX;
-			n2 = hit.gameObject.material.refractionIndex;
-			normal = hit.normal;
-		}
-		Vector3 c = hit.ray.direction.crossProduct(normal);
-		
-		double sinPhi1 = c.magnitude();
-		double sinPhi2 = n1 * sinPhi1 / n2;
-		double cosPhi2 = Math.sqrt(1 - sinPhi2*sinPhi2);
-		double tanPhi2 = sinPhi2 / cosPhi2;
-		
-		Vector3 r = normal.crossProduct(c.normalize()).multiplyBy(tanPhi2);
-		//System.out.println("OUT: " + normal.opposite().add(r));
-		return normal.opposite().add(r).normalize();
-	}
-	
-	private Vector3 refractionVector2(RaycastHit hit, boolean isExiting) {
-		double n1, n2;
-		Vector3 normal;
-		if(isExiting) {
-			n1 = hit.gameObject.material.refractionIndex;
-			n2 = Constants.AIR_REFRACTION_INDEX;
-			normal = hit.normal.opposite();
-		} else {
-			n1 = Constants.AIR_REFRACTION_INDEX;
-			n2 = hit.gameObject.material.refractionIndex;
-			normal = hit.normal;
-		}
-		
-		double c = - normal.dotProduct(hit.ray.direction);
-		double r = n1/n2;
-		Vector3 s = normal.multiplyBy(r*c + Math.sqrt(1 - r*r*(1 - c*c)));
-
-		return hit.ray.direction.multiplyBy(r).add(s);
-	}
-
 }
