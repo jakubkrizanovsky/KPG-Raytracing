@@ -2,12 +2,12 @@ package color_blending;
 
 import java.awt.Color;
 
+import misc.Util;
 import misc.Vector3;
 
 public class ColorBlender {
 	
 	public static Color blendColors(Color color1, Color color2, BlendMode blendMode) {
-		//TODO alpha
 		
 		int r = saturate(color1.getRed()*blendMode.src + color2.getRed()*blendMode.dst);
 		int g = saturate(color1.getGreen()*blendMode.src + color2.getGreen()*blendMode.dst);
@@ -17,7 +17,6 @@ public class ColorBlender {
 	}
 	
 	public static Color addColors(Color color1, Color color2) {
-		//TODO alpha
 		
 		int r = saturate(color1.getRed() + color2.getRed());
 		int g = saturate(color1.getGreen() + color2.getGreen());
@@ -27,7 +26,6 @@ public class ColorBlender {
 	}
 	
 	public static Color multiplyColors(Color color1, Color color2) {
-		//TODO alpha
 		
 		int r = saturate(color1.getRed() * color2.getRed() / 255.0);
 		int g = saturate(color1.getGreen() * color2.getGreen() / 255.0);
@@ -37,7 +35,6 @@ public class ColorBlender {
 	}
 	
 	public static Color multiplyColor(Color color1, double k) {
-		//TODO alpha
 		
 		int r = saturate(color1.getRed() * k);
 		int g = saturate(color1.getGreen() * k);
@@ -62,6 +59,14 @@ public class ColorBlender {
 		b /= colors.length;
 		
 		return new Color(r, g, b);
+	}
+	
+	public static Color lerp(Color a, Color b, double v) {
+		return new Color(
+				(int)Util.lerp(a.getRed(), b.getRed(), v),
+				(int)Util.lerp(a.getGreen(), b.getGreen(), v),
+				(int)Util.lerp(a.getBlue(), b.getBlue(), v)
+			);
 	}
 	
 	private static int saturate(double d) {

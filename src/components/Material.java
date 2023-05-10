@@ -7,8 +7,9 @@ public class Material {
 
 	private final Color color;
 	public Texture texture;
-	public final double metallicity;
 	public final double opacity;
+	public final double smoothness;
+	public final double metallicity;
 	public final double refractionIndex;
 	
 	public static final Material DEFAULT = new Material(Color.WHITE);
@@ -25,11 +26,16 @@ public class Material {
 		this(color, refractionIndex, opacity, 1);
 	}
 	
-	public Material(Color color, double refractionIndex, double opacity, double metallicity) {
+	public Material(Color color, double refractionIndex, double opacity, double smoothness) {
+		this(color, refractionIndex, opacity, smoothness, 1);
+	}
+	
+	public Material(Color color, double refractionIndex, double opacity, double smoothness, double metallicity) {
 		this.color = color;
-		this.metallicity = metallicity;
-		this.opacity = opacity;
 		this.refractionIndex = refractionIndex;
+		this.opacity = opacity;
+		this.smoothness = smoothness;
+		this.metallicity = metallicity;
 	}
 	
 	public Color getColor(Vector2 uv) {

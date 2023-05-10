@@ -16,7 +16,6 @@ import components.Transform;
 import light.DirectionalLight;
 import light.PointLight;
 import misc.ImageLoader;
-import misc.Ray;
 import misc.Vector3;
 import objects.Plane;
 import objects.Sphere;
@@ -85,8 +84,8 @@ public class Main extends JFrame {
 		scene.lights.add(pointLight);
 		
 
-		Sphere sphere = new Sphere(new Transform(new Vector3(-2, 0.5, 2), 1), new Material(Color.GREEN, 1.02, 1));
-		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 50));
+		Sphere sphere = new Sphere(new Transform(new Vector3(-2, 0.5, 2), 1), new Material(Color.GREEN, 1.02, 1, 0, 0));
+		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 50, 1, 1, 0.5));
 		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE, 1.02, 0.1));
 		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE, 1.02));
 		Sphere sphere5 = new Sphere(new Transform(new Vector3(0, 0.3, 0), 0.6), new Material(Color.RED, 1.02, 0.3));
@@ -108,11 +107,27 @@ public class Main extends JFrame {
 	}
 	
 	private static void createScene2(Scene scene) {
-		Plane plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE, 1));
-		Sphere sphere = new Sphere(new Transform(new Vector3(0, 0.5, -1), 1), new Material(Color.WHITE, 1.52, 0.5));
+		DirectionalLight redLight = new DirectionalLight(Color.WHITE, 0.33, new Vector3(1, -1, 1));
+		DirectionalLight greenLight = new DirectionalLight(Color.WHITE, 0.33, new Vector3(1, -1, -1));
+		DirectionalLight blueLight = new DirectionalLight(Color.WHITE, 0.33, new Vector3(-1, -1, 0));
+		
+		scene.lights.add(redLight);
+		scene.lights.add(greenLight);
+		scene.lights.add(blueLight);
+		
+		Plane plane = new Plane(new Transform(Vector3.ZERO, 1000, Vector3.FORWARD), new Material(Color.WHITE, 1));
+		Sphere sphere = new Sphere(new Transform(Vector3.UP, 2), new Material(Color.RED, 1.02, 1));
+		Sphere sphere2 = new Sphere(new Transform(new Vector3(3, 0.5, 0), 1), new Material(Color.WHITE, 1.02, 0.1));
+		Sphere sphere3 = new Sphere(new Transform(new Vector3(-3, 0.5, 0), 1), new Material(Color.WHITE, 1.02, 0.1));
+		Sphere sphere4 = new Sphere(new Transform(new Vector3(0, 0.5, 3), 1), new Material(Color.WHITE, 1.02, 0.1));
+		Sphere sphere5 = new Sphere(new Transform(new Vector3(0, 0.5, -3), 1), new Material(Color.WHITE, 1.02, 0.1));
 		
 		scene.objects.add(plane);
 		scene.objects.add(sphere);
+		scene.objects.add(sphere2);
+		scene.objects.add(sphere3);
+		scene.objects.add(sphere4);
+		scene.objects.add(sphere5);
 	}
 	
 	private static void createScene3(Scene scene) {

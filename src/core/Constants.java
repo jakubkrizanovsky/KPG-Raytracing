@@ -17,5 +17,7 @@ public class Constants {
 	public static final String RESOURCES_FOLDER_PATH = "Resources/";
 	
 	public static final String TEXTURES_FOLDER_PATH = RESOURCES_FOLDER_PATH + "Textures/";
+	
+	public static final boolean VISUALIZE_NORMALS = false;
 
 }

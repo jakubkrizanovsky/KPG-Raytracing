@@ -20,7 +20,7 @@ public class Scene {
 	
 	public final List<Light> lights = new LinkedList<Light>();
 	
-	private final AmbientLight ambientLight = new AmbientLight(Color.WHITE, 0.05);
+	private final AmbientLight ambientLight = new AmbientLight(Color.WHITE, 0.01);
 	
 	public Scene() {
 		
@@ -47,14 +47,14 @@ public class Scene {
 		
 		if(hit == null) {
 			
-			return specular(ray, hit, lastHit);
+			return specular(ray, lastHit);
 			
 		} else {
 			
 			
-//			if(true) {
-//				return ColorBlender.colorFromVector3(hit.normal);
-//			}
+			if(Constants.VISUALIZE_NORMALS) {
+				return ColorBlender.colorFromVector3(hit.normal);
+			}
 			
 			Color light = Color.BLACK;
 				
@@ -92,7 +92,10 @@ public class Scene {
 			}
 			
 			//Multiply by material color and metallicity
-			reflectedAndRefractedLight = ColorBlender.multiplyColors(reflectedAndRefractedLight, ColorBlender.multiplyColor(hit.gameObject.material.getColor(hit.uv), hit.gameObject.material.metallicity));
+			Color objectColor = hit.gameObject.material.getColor(hit.uv);
+			objectColor = ColorBlender.lerp(Color.WHITE, objectColor, hit.gameObject.material.metallicity);
+			reflectedAndRefractedLight = ColorBlender.multiplyColors(reflectedAndRefractedLight, objectColor);
+			reflectedAndRefractedLight = ColorBlender.multiplyColor(reflectedAndRefractedLight, hit.gameObject.material.smoothness);
 			
 			light = ColorBlender.addColors(light, reflectedAndRefractedLight);
 			
@@ -113,15 +116,16 @@ public class Scene {
 		return ColorBlender.multiplyColor(light.getColor(), intensity);
 	}
 	
-	private Color specular(Ray ray, RaycastHit currentHit, RaycastHit lastHit) {
+	private Color specular(Ray ray, RaycastHit lastHit) {
 		if(lastHit != null) {
 			
 			Color specularLight = Color.BLACK;
 			
 			for(Light light : lights) {
+				double specular = Constants.SPECULAR_CONSTANT * lastHit.gameObject.material.smoothness;
 				double cos = light.directionToLight(lastHit.position).dotProduct(ray.direction);
-				if(cos > Constants.SPECULAR_CONSTANT) {
-					double intenstity = (cos - Constants.SPECULAR_CONSTANT) / (1 - Constants.SPECULAR_CONSTANT);
+				if(cos > specular) {
+					double intenstity = (cos - specular) / (1 - specular);
 					specularLight = ColorBlender.addColors(specularLight, ColorBlender.multiplyColor(light.getColor(), intenstity));
 				} 
 			}
