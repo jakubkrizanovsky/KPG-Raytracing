@@ -3,6 +3,7 @@ package light;
 import java.awt.Color;
 
 import color_blending.ColorBlender;
+import misc.Vector3;
 
 public abstract class Light {
 	
@@ -17,5 +18,7 @@ public abstract class Light {
 	public Color getColor() {
 		return ColorBlender.multiplyColor(color, intensity);
 	}
+	
+	public abstract Vector3 directionToLight(Vector3 position);
 
 }

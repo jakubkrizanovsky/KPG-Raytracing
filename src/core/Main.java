@@ -13,6 +13,8 @@ import camera.Camera;
 import components.Material;
 import components.Texture;
 import components.Transform;
+import light.DirectionalLight;
+import light.PointLight;
 import misc.ImageLoader;
 import misc.Ray;
 import misc.Vector3;
@@ -42,8 +44,6 @@ public class Main extends JFrame {
 	private static final Vector3 CAMERA_DIRECTION = new Vector3(0, -0.1, 1);
 
 	public static Camera cam;
-	
-	private static Plane plane;
 
 	private long lastTime;
 	
@@ -63,7 +63,7 @@ public class Main extends JFrame {
 
 		
 		//System.out.println(scene.reflectionRay(new Ray(new Vector3(0, 0.75, -5), Vector3.FORWARD), 5, false));
-		System.out.println(scene.reflectionRay(new Ray(new Vector3(2, 0.75, -5), Vector3.FORWARD)));
+		//System.out.println(scene.reflectionRay(new Ray(new Vector3(2, 0.75, -5), Vector3.FORWARD)));
 		Main window = new Main();
 		window.initialize();
 	}
@@ -78,15 +78,24 @@ public class Main extends JFrame {
 	}
 	
 	private static void createScene(Scene scene) {
+		DirectionalLight directionalLight = new DirectionalLight(Color.WHITE, 0.7, new Vector3(1, -1, -1));
+		PointLight pointLight = new PointLight(Color.WHITE, 0.4, new Vector3(3, 4, -10));
+		
+		scene.lights.add(directionalLight);
+		scene.lights.add(pointLight);
+		
+
 		Sphere sphere = new Sphere(new Transform(new Vector3(-2, 0.5, 2), 1), new Material(Color.GREEN, 1.02, 1));
 		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 50));
 		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE, 1.02, 0.1));
 		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE, 1.02));
 		Sphere sphere5 = new Sphere(new Transform(new Vector3(0, 0.3, 0), 0.6), new Material(Color.RED, 1.02, 0.3));
-		Sphere sphere6 = new Sphere(new Transform(new Vector3(-3, 1.5, -2), 3), new Material(Color.CYAN, 1.02, 0.01));
-		plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE, 1));
-		Plane plane2 = new Plane(new Transform(new Vector3(0, 0, 15), 20, new Vector3(0, 10, 0)), new Material(Color.WHITE));
+		Sphere sphere6 = new Sphere(new Transform(new Vector3(-3, 1.5, -2), 3), new Material(Color.CYAN, 1.02, 0.1));
+		
+		Plane plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE, 1));
 		plane.material.texture = new Texture(ImageLoader.loadImage("checkered.jpg"));
+		
+		Plane mirror = new Plane(new Transform(new Vector3(0, 0, 15), 20, new Vector3(0, 10, 0)), new Material(Color.WHITE));
 		
 		scene.objects.add(sphere);
 		scene.objects.add(sphere2);
@@ -95,11 +104,11 @@ public class Main extends JFrame {
 		scene.objects.add(sphere5);
 		scene.objects.add(sphere6);
 		scene.objects.add(plane);
-		scene.objects.add(plane2);
+		scene.objects.add(mirror);
 	}
 	
 	private static void createScene2(Scene scene) {
-		plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE, 1));
+		Plane plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE, 1));
 		Sphere sphere = new Sphere(new Transform(new Vector3(0, 0.5, -1), 1), new Material(Color.WHITE, 1.52, 0.5));
 		
 		scene.objects.add(plane);
@@ -107,7 +116,7 @@ public class Main extends JFrame {
 	}
 	
 	private static void createScene3(Scene scene) {
-		plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE, 1));
+		Plane plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE, 1));
 		plane.material.texture = new Texture(ImageLoader.loadImage("checkered.jpg"));
 		//Sphere sphere = new Sphere(new Transform(new Vector3(0, 0.5, -1), 1), new Material(Color.WHITE, 1.52, 0.5));
 		
@@ -118,10 +127,10 @@ public class Main extends JFrame {
 	private static void update(double deltaTime) {
 		//Move camera slightly to the right
 		Vector3 newPos = cam.transform.position.add(cam.transform.right.multiplyBy(deltaTime));
-		cam.transform = new Transform(newPos, cam.transform.scale ,plane.transform.position.subtract(newPos));
+		cam.transform = new Transform(newPos, cam.transform.scale, newPos.multiplyBy(-1));
 		
-		//Make camera look at plane center
-		cam.transform = new Transform(cam.transform.position, cam.transform.scale, plane.transform.position.subtract(cam.transform.position));
+		//Make camera look at [0, 0, 0]
+		cam.transform = new Transform(cam.transform.position, cam.transform.scale, cam.transform.position.multiplyBy(-1));
 	}
 
 	

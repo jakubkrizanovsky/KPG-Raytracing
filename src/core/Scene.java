@@ -20,19 +20,17 @@ public class Scene {
 	
 	public final List<Light> lights = new LinkedList<Light>();
 	
-	private final AmbientLight ambientLight = new AmbientLight(Color.WHITE, 0.1);
+	private final AmbientLight ambientLight = new AmbientLight(Color.WHITE, 0.05);
 	
-	private final DirectionalLight directionalLight = new DirectionalLight(Color.WHITE, 0.8, new Vector3(1, -1, -1));
-
 	public Scene() {
 		
 	}
 	
 	public Color reflectionRay(Ray ray) {
-		return reflectionRay(ray, Constants.MAX_BOUNCES, false);
+		return reflectionRay(ray, null, Constants.MAX_BOUNCES);
 	}
 
-	public Color reflectionRay(Ray ray, int recursive, boolean isRefraction) {
+	public Color reflectionRay(Ray ray, RaycastHit lastHit, int recursive) {
 		if(recursive == 0) {
 			return Color.BLACK;
 		}
@@ -48,15 +46,8 @@ public class Scene {
 		}
 		
 		if(hit == null) {
-			double specularIntensity = directionalLight.direction.opposite().dotProduct(ray.direction);
 			
-			
-			if(specularIntensity > Constants.SPECULAR_CONSTANT) {
-				return ColorBlender.multiplyColor(directionalLight.getColor(), (specularIntensity - Constants.SPECULAR_CONSTANT) / (1 - Constants.SPECULAR_CONSTANT));
-			} else {
-				return Color.BLACK;
-			}
-			
+			return specular(ray, hit, lastHit);
 			
 		} else {
 			
@@ -69,7 +60,10 @@ public class Scene {
 				
 			//Lambert + Ambient light
 			light = ColorBlender.addColors(light, ambientLight.getColor());
-			light = ColorBlender.addColors(light, shadowRay(hit));
+			
+			for(Light l : lights) {
+				light = ColorBlender.addColors(light, shadowRay(hit, l));
+			}
 
 			//Multiply light by material color
 			light = ColorBlender.multiplyColors(light, hit.gameObject.material.getColor(hit.uv));
@@ -83,7 +77,7 @@ public class Scene {
 			//Refracted light
 			if(refraction.refractionCoefficient > 0) {
 				Ray refractionRay = new Ray(hit.position, refraction.direction);
-				Color refractedLight = reflectionRay(refractionRay, recursive-1, !isRefraction);
+				Color refractedLight = reflectionRay(refractionRay, hit, recursive-1);
 				refractedLight = ColorBlender.multiplyColor(refractedLight, refraction.refractionCoefficient);
 				reflectedAndRefractedLight = ColorBlender.addColors(reflectedAndRefractedLight, refractedLight);
 			}
@@ -92,7 +86,7 @@ public class Scene {
 			//Reflected light
 			if(refraction.reflexionCoefficient > 0) {
 				Ray reflectionRay = new Ray(hit.position, ray.direction.bounce(hit.normal));
-				Color reflectedLight = reflectionRay(reflectionRay, recursive-1, isRefraction);
+				Color reflectedLight = reflectionRay(reflectionRay, hit, recursive-1);
 				reflectedLight = ColorBlender.multiplyColor(reflectedLight, refraction.reflexionCoefficient);
 				reflectedAndRefractedLight = ColorBlender.addColors(reflectedAndRefractedLight, reflectedLight);	
 			}
@@ -106,17 +100,37 @@ public class Scene {
 		}
 	}
 	
-	private Color shadowRay(RaycastHit hit) {
-		Ray shadowRay = new Ray(hit.position, directionalLight.direction.opposite());
+	private Color shadowRay(RaycastHit hit, Light light) {
+		Ray shadowRay = new Ray(hit.position, light.directionToLight(hit.position));
 		
 		for(GameObject object : objects) {
-			RaycastHit currentHit = object.rayIntersect(shadowRay);
-			if(currentHit != null) {
+			if(object.rayIntersect(shadowRay) != null) {
 				return Color.BLACK;
 			}
 		}
 		
 		double intensity = shadowRay.direction.dotProduct(hit.normal);
-		return ColorBlender.multiplyColor(directionalLight.getColor(), intensity);
+		return ColorBlender.multiplyColor(light.getColor(), intensity);
+	}
+	
+	private Color specular(Ray ray, RaycastHit currentHit, RaycastHit lastHit) {
+		if(lastHit != null) {
+			
+			Color specularLight = Color.BLACK;
+			
+			for(Light light : lights) {
+				double cos = light.directionToLight(lastHit.position).dotProduct(ray.direction);
+				if(cos > Constants.SPECULAR_CONSTANT) {
+					double intenstity = (cos - Constants.SPECULAR_CONSTANT) / (1 - Constants.SPECULAR_CONSTANT);
+					specularLight = ColorBlender.addColors(specularLight, ColorBlender.multiplyColor(light.getColor(), intenstity));
+				} 
+			}
+			
+			return specularLight;
+			
+			
+		} else {
+			return Color.BLACK;
+		}
 	}
 }

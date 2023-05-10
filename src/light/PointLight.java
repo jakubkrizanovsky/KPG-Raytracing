@@ -13,4 +13,9 @@ public class PointLight extends Light {
 		this.position = position;
 	}
 
+	@Override
+	public Vector3 directionToLight(Vector3 position) {
+		return this.position.subtract(position).normalize();
+	}
+
 }

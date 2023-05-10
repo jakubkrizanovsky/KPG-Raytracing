@@ -13,4 +13,8 @@ public class DirectionalLight extends Light {
 		this.direction = direction.normalize();
 	}
 
+	@Override
+	public Vector3 directionToLight(Vector3 position) {
+		return direction.opposite().normalize();
+	}
 }
