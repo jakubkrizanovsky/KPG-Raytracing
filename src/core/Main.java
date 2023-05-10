@@ -81,6 +81,7 @@ public class Main extends JFrame {
 		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE, 1.02, 0.2));
 		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE, 1.02));
 		Sphere sphere5 = new Sphere(new Transform(new Vector3(0, 0.3, 0), 0.6), new Material(Color.RED, 1.02, 0.3));
+		Sphere sphere6 = new Sphere(new Transform(new Vector3(-3, 1.5, -2), 3), new Material(Color.CYAN, 1.04, 0.01));
 		plane = new Plane(new Transform(Vector3.ZERO, 1000, Vector3.FORWARD), new Material(Color.WHITE, 1));
 		Plane plane2 = new Plane(new Transform(new Vector3(0, 0, 15), 20, new Vector3(0, 10, 0)), new Material(Color.WHITE));
 		
@@ -89,6 +90,7 @@ public class Main extends JFrame {
 		scene.objects.add(sphere3);
 		scene.objects.add(sphere4);
 		scene.objects.add(sphere5);
+		scene.objects.add(sphere6);
 		scene.objects.add(plane);
 		//scene.objects.add(plane2);
 	}
