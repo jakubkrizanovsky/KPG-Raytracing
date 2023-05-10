@@ -4,19 +4,9 @@ import core.Constants;
 
 public class Refraction {
 	
-	public final Vector3 vector;
+	public final Vector3 direction;
 	public final double reflexionCoefficient;
-	
-	public Refraction(Vector3 vector, double cosIncidenceAngle, double cosRefractionAngle, double n1, double n2) {
-		this.vector = vector;
-		
-		double Rs = (n1 * cosIncidenceAngle - n2 * cosRefractionAngle) / (n1 * cosIncidenceAngle + n2 * cosRefractionAngle);
-		Rs *= Rs;
-		double Rp = (n1 * cosRefractionAngle - n2 * cosIncidenceAngle) / (n1 * cosRefractionAngle + n2 * cosIncidenceAngle);
-		Rp *= Rp;
-		
-		this.reflexionCoefficient = 0.5*(Rs + Rp);
-	}
+	public final double refractionCoefficient;
 	
 	public Refraction(RaycastHit hit) {
 		double cosPhi1 = hit.ray.direction.opposite().dotProduct(hit.normal);
@@ -43,9 +33,15 @@ public class Refraction {
 		double tanPhi2 = sinPhi2 / cosPhi2;
 		
 		Vector3 r = normal.crossProduct(c.normalize()).multiplyBy(tanPhi2);
-		this.vector = normal.opposite().add(r).normalize();
+		this.direction = normal.opposite().add(r).normalize();
 		
 		double Rs = (n1 * cosPhi1 - n2 * cosPhi2) / (n1 * cosPhi1 + n2 * cosPhi2);
-		this.reflexionCoefficient = Rs*Rs;
+		Rs *= Rs;
+		double Rp = (n1 * cosPhi2 - n2 * cosPhi1) / (n1 * cosPhi2 + n2 * cosPhi1);
+		Rp *= Rp;
+		double R = 0.5*(Rs + Rp);
+
+		this.reflexionCoefficient = Math.max(0, Math.min(1, R + hit.gameObject.material.opacity));
+		this.refractionCoefficient = 1 - reflexionCoefficient;
 	}
 }

@@ -80,23 +80,22 @@ public class Scene {
 			Color reflectedAndRefractedLight = Color.BLACK;
 			Refraction refraction = new Refraction(hit);
 			
-			double reflectionIntensity = refraction.reflexionCoefficient * hit.gameObject.material.opacity;
-			double refractionIntensity = (1 - refraction.reflexionCoefficient) * (1 - hit.gameObject.material.opacity);
-			
-			if(refractionIntensity > 0) {
-				//Refracted light
-				Ray refractionRay = new Ray(hit.position, refraction.vector);
+			//Refracted light
+			if(refraction.refractionCoefficient > 0) {
+				Ray refractionRay = new Ray(hit.position, refraction.direction);
 				Color refractedLight = reflectionRay(refractionRay, recursive-1, !isRefraction);
-				refractedLight = ColorBlender.multiplyColor(refractedLight, refractionIntensity);
+				refractedLight = ColorBlender.multiplyColor(refractedLight, refraction.refractionCoefficient);
 				reflectedAndRefractedLight = ColorBlender.addColors(reflectedAndRefractedLight, refractedLight);
-			} else {
-				reflectionIntensity = hit.gameObject.material.opacity;
 			}
+			
+			
 			//Reflected light
-			Ray reflectionRay = new Ray(hit.position, ray.direction.bounce(hit.normal));
-			Color reflectedLight = reflectionRay(reflectionRay, recursive-1, isRefraction);
-			reflectedLight = ColorBlender.multiplyColor(reflectedLight, reflectionIntensity);
-			reflectedAndRefractedLight = ColorBlender.addColors(reflectedAndRefractedLight, reflectedLight);	
+			if(refraction.reflexionCoefficient > 0) {
+				Ray reflectionRay = new Ray(hit.position, ray.direction.bounce(hit.normal));
+				Color reflectedLight = reflectionRay(reflectionRay, recursive-1, isRefraction);
+				reflectedLight = ColorBlender.multiplyColor(reflectedLight, refraction.reflexionCoefficient);
+				reflectedAndRefractedLight = ColorBlender.addColors(reflectedAndRefractedLight, reflectedLight);	
+			}
 			
 			//Multiply by material color and metallicity
 			reflectedAndRefractedLight = ColorBlender.multiplyColors(reflectedAndRefractedLight, ColorBlender.multiplyColor(hit.gameObject.material.color, hit.gameObject.material.metallicity));
