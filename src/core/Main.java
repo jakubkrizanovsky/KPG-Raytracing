@@ -4,19 +4,22 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import camera.AntiAliasedPerspectiveCamera;
 import camera.Camera;
+import camera.OrthogonalCamera;
 import components.Material;
 import components.Texture;
 import components.Transform;
 import light.DirectionalLight;
 import light.PointLight;
 import misc.ImageLoader;
+import misc.Util;
 import misc.Vector3;
+import objects.GameObject;
 import objects.Plane;
 import objects.Sphere;
 
@@ -53,16 +56,13 @@ public class Main extends JFrame {
 	 */
 	public static void main(String[] args) {		
 		Scene scene = new Scene();
-		createScene(scene);
+		createRandomScene(scene);
 		
-		cam = new AntiAliasedPerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
-		//cam = new PerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
-		//cam = new OrthogonalCamera(scene, new Transform(ORTHOGONAL_CAMERA_ORIGIN, 10, CAMERA_DIRECTION));
+		//cam = new AntiAliasedPerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
+		cam = new OrthogonalCamera(scene, new Transform(ORTHOGONAL_CAMERA_ORIGIN, 10, CAMERA_DIRECTION));
 		exportImage();
 
 		
-		//System.out.println(scene.reflectionRay(new Ray(new Vector3(0, 0.75, -5), Vector3.FORWARD), 5, false));
-		//System.out.println(scene.reflectionRay(new Ray(new Vector3(2, 0.75, -5), Vector3.FORWARD)));
 		Main window = new Main();
 		window.initialize();
 	}
@@ -74,6 +74,10 @@ public class Main extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);	
 		this.setLocationRelativeTo(null);	
 		this.setVisible(true);
+		
+		while(true) {
+			this.repaint();
+		}
 	}
 	
 	private static void createScene(Scene scene) {
@@ -107,9 +111,9 @@ public class Main extends JFrame {
 	}
 	
 	private static void createScene2(Scene scene) {
-		DirectionalLight redLight = new DirectionalLight(Color.WHITE, 0.33, new Vector3(1, -1, 1));
-		DirectionalLight greenLight = new DirectionalLight(Color.WHITE, 0.33, new Vector3(1, -1, -1));
-		DirectionalLight blueLight = new DirectionalLight(Color.WHITE, 0.33, new Vector3(-1, -1, 0));
+		DirectionalLight redLight = new DirectionalLight(Color.CYAN, 0.8, new Vector3(1, -1, 1));
+		DirectionalLight greenLight = new DirectionalLight(Color.MAGENTA, 0.8, new Vector3(1, -1, -1));
+		DirectionalLight blueLight = new DirectionalLight(Color.YELLOW, 0.8, new Vector3(-1, -1, 0));
 		
 		scene.lights.add(redLight);
 		scene.lights.add(greenLight);
@@ -139,6 +143,25 @@ public class Main extends JFrame {
 		//scene.objects.add(sphere);
 	}
 	
+	private static void createRandomScene(Scene scene) {
+		PointLight pointLight = new PointLight(Color.WHITE, 0.8, new Vector3(0, 3, 0));
+		scene.lights.add(pointLight);
+		
+		Plane plane = new Plane(new Transform(Vector3.ZERO, 1000, Vector3.FORWARD), new Material(Color.WHITE, 1));
+		scene.objects.add(plane);
+		
+		Random r = new Random();
+		
+		for(int i = 0; i < 25; i++) {
+			double scale = r.nextDouble();
+			Transform t = new Transform(new Vector3(r.nextDouble(), 0, r.nextDouble()).subtract(Vector3.ONE.subtract(Vector3.UP).multiplyBy(0.5)).multiplyBy(10).add(Vector3.UP.multiplyBy(0.5*scale)), scale);
+			Material material = new Material(Util.randomColor(r), 1 + r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble());
+			GameObject sphere = new Sphere(t, material);
+			
+			scene.objects.add(sphere);
+		}
+	}
+	
 	private static void update(double deltaTime) {
 		//Move camera slightly to the right
 		Vector3 newPos = cam.transform.position.add(cam.transform.right.multiplyBy(deltaTime));
@@ -161,9 +184,6 @@ public class Main extends JFrame {
 		cam.generateScene(image);
 		
 		g.drawImage(image, 0, 0, Color.BLACK, null);
-
-		
-		this.repaint();
 	}
 	
 	private static void exportImage() {

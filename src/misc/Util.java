@@ -1,5 +1,8 @@
 package misc;
 
+import java.awt.Color;
+import java.util.Random;
+
 public class Util {
 	
 	public static double clamp(double v, double a, double b) {
@@ -14,4 +17,10 @@ public class Util {
 		return (v-a)/(b-a);
 	}
 	
+	public static Color randomColor(Random r) {
+		return new Color(
+			r.nextInt(256),
+			r.nextInt(256),
+			r.nextInt(256));
+	}
 }

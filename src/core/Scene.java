@@ -92,9 +92,8 @@ public class Scene {
 			}
 			
 			//Multiply by material color and metallicity
-			Color objectColor = hit.gameObject.material.getColor(hit.uv);
-			objectColor = ColorBlender.lerp(Color.WHITE, objectColor, hit.gameObject.material.metallicity);
-			reflectedAndRefractedLight = ColorBlender.multiplyColors(reflectedAndRefractedLight, objectColor);
+			Color metallicColor = ColorBlender.lerp(hit.gameObject.material.getColor(hit.uv), Color.WHITE, hit.gameObject.material.metallicity);
+			reflectedAndRefractedLight = ColorBlender.multiplyColors(reflectedAndRefractedLight, metallicColor);
 			reflectedAndRefractedLight = ColorBlender.multiplyColor(reflectedAndRefractedLight, hit.gameObject.material.smoothness);
 			
 			light = ColorBlender.addColors(light, reflectedAndRefractedLight);
