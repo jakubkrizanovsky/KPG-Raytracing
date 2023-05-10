@@ -44,16 +44,30 @@ public class Sphere extends GameObject {
 			x2 = (-b + Math.sqrt(determinant))/(2*a);
 		}
 		
+		
+		
+		
+		double distance = 0;
 		if(x1 > Constants.MIN_HIT_DISTANCE) {
-			Vector3 position = ray.pointOnRay(x1);
-			return new RaycastHit(ray, position, normal(position), x1, this, Vector2.ZERO); //TODO
+			distance = x1;
 		} else if(x2 > Constants.MIN_HIT_DISTANCE) {
-			Vector3 position = ray.pointOnRay(x2);
-			return new RaycastHit(ray, position, normal(position), x2, this, Vector2.ZERO); //TODO
+			distance = x2;
+		} else {
+			return null;
 		}
 		
+		Vector3 position = ray.pointOnRay(distance);
+
 		
-		return null;
+		Vector3 normal = normal(position);
+		double cos = ray.direction.opposite().dotProduct(normal);
+		if(cos < 0) {
+			normal = normal.opposite();
+		}
+		
+		return new RaycastHit(ray, position, normal, cos, x1, this, Vector2.ZERO); //TODO
+
+		
 	}
 
 	@Override

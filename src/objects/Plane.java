@@ -27,16 +27,23 @@ public class Plane extends GameObject {
 		
 		Vector3 hitPosition = ray.pointOnRay(t);
 		
+		//TODO
 		if(hitPosition.subtract(transform.position).magnitude() > transform.scale/2)
 			return null;
+		
+		Vector3 normal = normal(hitPosition);
+		double cos = ray.direction.opposite().dotProduct(normal);
+		if(cos < 0) {
+			normal = normal.opposite();
+		}
 		
 		 
 		Vector2 uv = new Vector2(
 				(hitPosition.x - transform.position.x) / transform.scale,
 				(hitPosition.z - transform.position.z) / transform.scale
-				).add(Vector2.ONE.multiplyBy(0.5));
+			).add(Vector2.ONE.multiplyBy(0.5));
 		
-		return new RaycastHit(ray, hitPosition, transform.up, t, this, uv);
+		return new RaycastHit(ray, hitPosition, normal, cos, t, this, uv);
 	}
 
 	@Override

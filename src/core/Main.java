@@ -59,7 +59,7 @@ public class Main extends JFrame {
 		cam = new AntiAliasedPerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
 		//cam = new PerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
 		//cam = new OrthogonalCamera(scene, new Transform(ORTHOGONAL_CAMERA_ORIGIN, 10, CAMERA_DIRECTION));
-		//exportImage();
+		exportImage();
 
 		
 		//System.out.println(scene.reflectionRay(new Ray(new Vector3(0, 0.75, -5), Vector3.FORWARD), 5, false));
@@ -79,11 +79,11 @@ public class Main extends JFrame {
 	
 	private static void createScene(Scene scene) {
 		Sphere sphere = new Sphere(new Transform(new Vector3(-2, 0.5, 2), 1), new Material(Color.GREEN, 1.02, 1));
-		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 3));
-		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE, 1.02, 0.2));
+		Sphere sphere2 = new Sphere(new Transform(new Vector3(0, 0.5, 1), 1), new Material(Color.ORANGE, 50));
+		Sphere sphere3 = new Sphere(new Transform(new Vector3(2, 1, 1), 2), new Material(Color.WHITE, 1.02, 0.1));
 		Sphere sphere4 = new Sphere(new Transform(new Vector3(2, 0.1, -1), 0.2), new Material(Color.BLUE, 1.02));
 		Sphere sphere5 = new Sphere(new Transform(new Vector3(0, 0.3, 0), 0.6), new Material(Color.RED, 1.02, 0.3));
-		Sphere sphere6 = new Sphere(new Transform(new Vector3(-3, 1.5, -2), 3), new Material(Color.CYAN, 1.04, 0.01));
+		Sphere sphere6 = new Sphere(new Transform(new Vector3(-3, 1.5, -2), 3), new Material(Color.CYAN, 1.02, 0.01));
 		plane = new Plane(new Transform(Vector3.ZERO, 10, Vector3.FORWARD), new Material(Color.WHITE, 1));
 		Plane plane2 = new Plane(new Transform(new Vector3(0, 0, 15), 20, new Vector3(0, 10, 0)), new Material(Color.WHITE));
 		plane.material.texture = new Texture(ImageLoader.loadImage("checkered.jpg"));

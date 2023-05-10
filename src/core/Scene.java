@@ -41,7 +41,7 @@ public class Scene {
 		for(GameObject object : objects) {
 			RaycastHit currentHit = object.rayIntersect(ray);
 			if(currentHit != null) {
-				if(hit == null || hit.distnace > currentHit.distnace) {
+				if(hit == null || hit.distance > currentHit.distance) {
 					hit = currentHit;
 				}
 			}
