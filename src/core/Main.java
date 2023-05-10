@@ -9,6 +9,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import camera.AntiAliasedPerspectiveCamera;
 import camera.Camera;
 import camera.OrthogonalCamera;
 import components.Material;
@@ -58,8 +59,8 @@ public class Main extends JFrame {
 		Scene scene = new Scene();
 		createRandomScene(scene);
 		
-		//cam = new AntiAliasedPerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
-		cam = new OrthogonalCamera(scene, new Transform(ORTHOGONAL_CAMERA_ORIGIN, 10, CAMERA_DIRECTION));
+		cam = new AntiAliasedPerspectiveCamera(scene, new Transform(CAMERA_ORIGIN, 1, CAMERA_DIRECTION));
+		//cam = new OrthogonalCamera(scene, new Transform(ORTHOGONAL_CAMERA_ORIGIN, 10, CAMERA_DIRECTION));
 		exportImage();
 
 		
